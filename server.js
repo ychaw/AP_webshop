@@ -24,7 +24,11 @@ app.use(session({
 }));
 
 // Passwort Verschlüsselung
-const passwordHash = require('password-hash');
+const passwordHash = require('bcrypt');
+
+//Include CSS and JS directories
+app.use(express.static(__dirname + "/stylings"));
+app.use(express.static(__dirname + "/js"));
 
 // Webserver starten http://localhost:3000
 app.listen(3000, function(){
