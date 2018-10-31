@@ -3,16 +3,34 @@
     <head>
         <title>Home</title>
         <link rel="stylesheet" type="text/css" href="main.css">
-        <link rel="stylesheet" type="text/css" href="list.css">
+        <link rel="stylesheet" type="text/css" href="index.css">
     </head>
-    <body class = "container">
-      <div class= "all-item-list">
-        <ul class= "all-item-list">
-          <div class = "list-heading">Show items here</div>
-          <li class = "list-entry">test</li>
-          <li class = "list-entry">test</li>
-          <li class = "list-entry">test</li>
+    <body class="container">
+      <div class="left-box">
+        <ul class="navigation">
+          <li>
+            <div class="list-heading">Navigation</div>
+            <form action="/navigation" method="POST">
+              <button class="nav-button" type="submit" value="/login" name="goTo">Login</button><br>
+              <button class="nav-button" type="submit" value="/registration" name="goTo">Registration</button><br>
+              <button class="nav-button" type="submit" value="/checkout" name="goTo">Checkout</button>
+            </form>
+          </li>
         </ul>
+      </div>
+      <div class="middle-box">
+        <form action="/searchItem" method="post">
+          <input type="text"  name="artikelName"> <br>
+        </form>
+        <ul class= "all-item-list">
+          <div class="list-heading">Show items here</div>
+          <li class="list-entry">test</li>
+          <li class="list-entry">test</li>
+          <li class="list-entry">test</li>
+        </ul>
+      </div>
+      <div class="right-box">
+        RIGHT
       </div>
     </body>
 </html>
