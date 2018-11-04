@@ -3,16 +3,46 @@
     <head>
         <title>Home</title>
         <link rel="stylesheet" type="text/css" href="main.css">
-        <link rel="stylesheet" type="text/css" href="list.css">
+        <link rel="stylesheet" type="text/css" href="index.css">
     </head>
-    <body class = "container">
-      <div class= "all-item-list">
+
+    <body class="container">
+      <div class="header">
+        <div class="dropdown">
+
+          <button onClick="toggleDropdown()" class="nav-menu-button">Navigation</button>
+
+          <div id="navDropdown" class="navigation">
+            <form action="/navigation" method="POST">
+              <button class="nav-button" type="submit" value="/login" name="goTo">Login</button>
+              <button class="nav-button" type="submit" value="/registration" name="goTo">Registration</button>
+              <button class="nav-button" type="submit" value="/checkout" name="goTo">Checkout</button>
+            </form>
+          </div>
+
+        </div>
+
+        <form action="/searchItem" method="post">
+          <input class="search-bar-input" type="text" id="articelName" name="articelName" placeholder="Search..."> <br>
+        </form>
+
+    </div>
+      <div class="middle-box">
+
         <ul class= "all-item-list">
-          <div class = "list-heading">Show items here</div>
-          <li class = "list-entry">test</li>
-          <li class = "list-entry">test</li>
-          <li class = "list-entry">test</li>
+          <div class="list-heading">Show items here</div>
+          <li class="list-entry">test</li>
+          <li class="list-entry">test</li>
+          <li class="list-entry">test</li>
         </ul>
+
+        <div class="right-box">
+          RIGHT
+        </div>
+
       </div>
+
+      <script src="dropdown.js"></script>
+
     </body>
 </html>

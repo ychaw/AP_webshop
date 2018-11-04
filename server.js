@@ -59,3 +59,7 @@ app.get("/checkout", function(req, res) {
 app.get("/newproduct", function(req, res) {
   res.render("newproduct");
 });
+
+app.post("/navigation", function(req, res) {
+	res.redirect(req.body["goTo"]);
+});
