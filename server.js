@@ -40,6 +40,12 @@ app.get("/", function(req, res) {
   res.redirect("home");
 });
 
+ //DB erstellen, später auskommentieren
+app.get("/", (request,response) =>{
+	userDB.run('CREATE TABLE user (id_user INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL)');
+	productDB.run('CREATE TABLE user (id_product INTEGER PRIMARY KEY AUTOINCREMENT, productname TEXT NOT NULL, price TEXT NOT NULL, quantity TEXT NOT NULL)');
+});
+
 app.get("/home", function(req, res) {
   res.render("index");
 });
