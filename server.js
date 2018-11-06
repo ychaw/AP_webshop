@@ -86,7 +86,7 @@ app.post('/sucessreg', (req, res) => {
 	});
 	res.redirect('/login');
 });
-
+*/
 app.post('/delete', (req, res) => {
 	const user = req.body["user"];
 	
@@ -97,7 +97,7 @@ app.post('/delete', (req, res) => {
 	});
 	res.redirect('/login');
 });
-*/
+
 app.post('/login', function (req, res) {
 	const user = req.body["name"];
 	const password = req.body["pw"];
