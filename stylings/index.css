@@ -1,21 +1,3 @@
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-
-  width: 100%;
-  border: 1px solid black;
-  margin-bottom: 5px;
-}
-
 .middle-box {
   display: flex;
   flex-direction: row;
@@ -51,7 +33,7 @@
 .navigation {
   display: none;
   position: absolute;
-  background-color: #ccc;
+  background-color: #F3BF04;
   min-width: 100%;
   overflow: auto;
 
@@ -74,7 +56,7 @@
   display:block;
 }
 
-.nav-menu-button:hover { background: #eee;}
+.nav-menu-button:hover { background: #FDDA5E;}
 
 .show {display:block;}
 

@@ -1,7 +1,27 @@
 html {
   font-size: 100%;
   font-family: "Helvetica", sans-serif;
-  background-color: #ddd;
+  background-color: #FFF;
+}
+
+.container {
+  display:flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+.header {
+  display:flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  min-width: 100%
+  overflow:auto;
+
+  background-color: #F3BF04;
+
+  margin-bottom: 5px;
 }
 
 .nav-button {
@@ -21,5 +41,5 @@ html {
 }
 
 .nav-button:hover {
-  background: #eee;
+  background: #FDDA5E;
 }

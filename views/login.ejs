@@ -1,19 +1,23 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Login</title>
     <link rel="stylesheet" type="text/css" href="main.css">
     <link rel="stylesheet" type="text/css" href="login.css">
   </head>
+
   <body class="container">
     <div class="header">
       <form action="/navigation" method="POST">
         <button class="nav-button" type="submit" value="/home" name="goTo">Home</button>
       </form>
     </div>
+
     <div class="login-box">
       <form action="/login" method="POST">
         <input type="text" name="name" placeholder="Username"><br>
-        <input type="password" name="pw" placeholder="Password">
+        <input type="password" name="pw" placeholder="Password"><br>
+        <button type="submit">Login</button>
       </form>
     </div>
   </body>

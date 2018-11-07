@@ -1,29 +1,9 @@
-.container {
-  display:flex;
-  flex-direction: column;
-  align-content: center;
-  justify-content: center;
-
-}
-
-.header {
-  display:flex;
-  flex-direction: row;
-  align-content: left;
-  justify-content: left;
-
-  background-color: #ccc;
-
-  padding: 10px;
-  margin: 10px;
-}
-
 .login-box {
     display:flex;
     flex-direction: row;
     align-content: center;
     justify-content: center;
-    
+
     padding: 10px;
     margin: 10px;
 }
