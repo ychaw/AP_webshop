@@ -77,7 +77,7 @@ app.post("/navigation", function(req, res) {
 /*
 app.post('/sucessreg', (req, res) => {
 	const newUser = req.body["user"];
-	const newPswd = req.body["password"];
+	const newPswd = req.body["pw"];
 
 	db.run(`INSERT INTO users (userName, userPW) VALUES ('${newUser}', '${newPswd}')`, (error) => {
 			if (error){
@@ -89,7 +89,7 @@ app.post('/sucessreg', (req, res) => {
 */
 app.post('/delete', (req, res) => {
 	const user = req.body["user"];
-	
+
 	db.run(`DELETE FROM users WHERE userName='${user}'`, (error) => {
 			if (error){
 					console.log(error.message);

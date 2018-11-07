@@ -1,4 +1,9 @@
-.login-box {
+a {
+  margin: 5px;
+  padding: 5px;
+}
+
+.reg-box {
     display:flex;
     flex-direction: row;
     align-content: center;
@@ -8,14 +13,14 @@
     margin: 10px;
 }
 
-.login-box input {
+.reg-box input {
   margin: 5px;
   padding: 5px;
   border: none;
   border-radius: 15px;
 }
 
-.login-box button {
+.reg-box button {
   display: block;
 }
 

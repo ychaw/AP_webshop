@@ -2,11 +2,21 @@
   <head>
     <title>Registration</title>
     <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" type="text/css" href="registration.css">
   </head>
-  <body>
-    Registration
-    <form action="/navigation" method="POST">
-      <button class="nav-button" type="submit" value="/home" name="goTo">Home</button>
-    </form>
+  <body class="container">
+    <div class="header">
+      <a class="nav-button" href="/home">Home</a>
+    </div>
+
+    <div class="reg-box">
+      <form action="/registration" method="POST">
+        <input type="text" name="name" placeholder="Username"><br>
+        <input type="password" name="pw" placeholder="Password"><br>
+        <button class="nav-button" type="submit">Login</button>
+        <a class="nav-button" href="/login">Already have an account?</a>
+      </form>
+    </div>
+
   </body>
 </html>
