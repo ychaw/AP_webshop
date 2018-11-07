@@ -1,0 +1,55 @@
+html {
+  font-size: 100%;
+  font-family: "Helvetica", sans-serif;
+  background-color: #FDDA5E;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.container {
+  display:flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  margin:5px;
+}
+
+.header {
+  display:flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  min-width: 100%
+  overflow:auto;
+  margin:0;
+
+  background-color: #F3BF04;
+
+  margin-bottom: 5px;
+}
+
+.nav-button {
+  background-color: #2E2608;
+
+  font-family: "OpenSans", sans-serif;
+  font-size: 1.2rem;
+  color: #FDDA5E;
+
+  border: 3px solid #2E2608;
+  border-radius: 15px;
+
+  margin: 5px;
+
+  padding: 3px;
+
+  cursor: pointer;
+
+  transition: border-color 0.8s ease;
+}
+
+.nav-button:hover {
+  border-color: #FDDA5E;
+}

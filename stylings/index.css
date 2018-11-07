@@ -1,0 +1,98 @@
+.middle-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.all-item-list {
+  margin: 15px;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: #F3BF04;
+
+  list-style-type: none;
+
+}
+
+.list-heading {
+  align-items: center;
+  font-size: 2rem;
+}
+
+.list-entry {
+  font-size: 1.3rem;
+}
+
+.dropdown {
+  position:relative;
+  display: inline-block;
+}
+
+.navigation {
+  display: none;
+  position: absolute;
+  background-color: #F3BF04;
+  min-width: 100%;
+  overflow: auto;
+
+  width: 10rem;
+  height: 10rem;
+
+  box-shadow: 16px 8px 16px 0px rgba(0,0,0,0.2);
+
+  z-index: 1;
+
+}
+
+.nav-menu-button {
+  background-color: #2E2608;
+
+  font-family: "OpenSans", sans-serif;
+  font-size: 1.2rem;
+  color: #FDDA5E;
+
+  border: 3px #2E2608 solid;
+  border-radius: 15px;
+
+  margin: 10px;
+
+  padding: 5px;
+
+  cursor: pointer;
+
+  transition: border-color 0.8s ease;
+  display:block;
+  overflow: visible;
+}
+
+.nav-menu-button:hover {
+  border-color: #FDDA5E
+}
+
+.show {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-bar-input {
+  width: 400px;
+  height: 20px;
+  margin-top: 0.7rem;
+  padding: 5px;
+  overflow: auto;
+
+  background-color: #FDDA5E;
+  border:none;
+  border-radius: 15px;
+
+  transition: background-color 0.8s ease;
+
+}
+
+.search-bar-input:focus {
+  background-color: #FFF;
+}

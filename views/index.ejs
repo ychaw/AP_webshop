@@ -1,9 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Home</title>
-  </head>
-  <body>
-    <h1>Test</h1>
-  </body>
+    <head>
+        <title>Home</title>
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="stylesheet" type="text/css" href="index.css">
+    </head>
+
+    <body class="container">
+      <div class="header">
+        <div class="dropdown">
+
+          <button onClick="toggleDropdown()" class="nav-menu-button">Navigation</button>
+
+          <div id="navDropdown" class="navigation">
+            <a class="nav-button" href="/login">Login</a>
+            <a class="nav-button" href="/registration">Registration</a>
+            <a class="nav-button" href="/checkout">Checkout</a>
+          </div>
+
+        </div>
+
+        <form action="/searchItem" method="post">
+          <input class="search-bar-input" type="text" id="articelName" name="articelName" placeholder="Search..."> <br>
+        </form>
+
+    </div>
+    <div class="middle-box">
+      <ul class= "all-item-list">
+        <div class="list-heading">Show items here</div>
+        <li class="list-entry">test</li>
+        <li class="list-entry">test</li>
+        <li class="list-entry">test</li>
+      </ul>
+
+      <ul class= "all-item-list">
+        <div class="list-heading">Basket</div>
+        <li class="list-entry">test</li>
+        <li class="list-entry">test</li>
+        <li class="list-entry">test</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="dropdown.js"></script>
+
+</body>
 </html>
