@@ -14,7 +14,7 @@ a {
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  margin:5px;
+  margin:0px;
 }
 
 .header {
@@ -25,6 +25,7 @@ a {
   min-width: 100%
   overflow:auto;
   margin:0;
+  padding: 5px;
 
   background-color: #F3BF04;
 
