@@ -75,16 +75,46 @@ app.post("/navigation", function(req, res) {
 /*Register user*/
 
 app.post('/registration', (req, res) => {
-	const newUser = req.body["name"];
-	const newPswd = req.body["pw"];
+	const newUser = req.body["user"];
+	const newPswd1 = req.body["pw1"];
+	const newPswd2 = req.body["pw2"];
 
-	userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${newPswd}')`, (error) => {
-			if (error){
-					console.log(error.message);
-					res.render("error");
+	if (newUser in users || newPswd1 != newPswd2 || newUser == '' || newPswd1 == '' || newPswd2 == '') {
+		// error
+		// Hab erstmal das hier eingefügt... 
+		// Kannst du natürlich noch schöner machen
+		// Aber so ist erstmal eine Funktionalität vorhanden
+		if (newUser in users) {
+			res.write("<html><body><li>Username is already taken.</li></body></html>");
+		}
+		if (newPswd1 != newPswd2) {
+			res.write("<html><body><li>Passwords are not the same.</li></body></html>");
+		}
+		if (newUser == '') {
+			res.write("<html><body><li>Username is empty.</li></body></html>");
+		}
+		if (newPswd1 == '') {
+			res.write("<html><body><li>First Password is empty.</li></body></html>");
+		}
+		if (newPswd2 == '') {
+			res.write("<html><body><li>Second Password is empty.</li></body></html>");
+		}
+		res.write(`
+			<br>
+			<form action="/regestration" method="GET">
+					<button type="submit">Try again</button>
+			</form>
+		`);
+		res.end();
+	} else {
+		db.run(`INSERT INTO users (userName, userPW) VALUES ('${newUser}', '${newPswd}')`, (error) => {
+			if (error) {
+				console.log(error.message);
 			}
-	});
-	res.redirect('/login');
+		});
+		//show successfull registration prompt or something similar. Then redirect to login
+		res.redirect('/login');
+	}
 });
 
 /*Delete user*/
