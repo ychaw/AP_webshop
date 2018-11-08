@@ -1,14 +1,22 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Success</title>
+        <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="stylesheet" type="text/css" href="success.css">
     </head>
-    <body>
-        <p>You successfully logged in!</p>
-        <p>User: <%= user%></p><br>
-        <a href="\login">Log out</a><br>
+    <body class="container">
+      <div class="header">
+        <a class="nav-button" href="/home">Home</a>
+      </div>
+
+      <div class="content-box">
+        <h1>Welcome <%= user%>!</h1>
+        <a class="nav-button" href="\">Log out</a>
         <form action="delete" method="post">
-            
-            <input type="submit" value="Delete account" name="submit">
+          <input class="nav-button" type="submit" value="Delete account" name="submit">
         </form>
+
+      </div>
     </body>
 </html>

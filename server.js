@@ -72,39 +72,43 @@ app.post("/navigation", function(req, res) {
 	res.redirect(req.body["goTo"]);
 });
 
+/*Register user*/
 
-
-/*
-app.post('/sucessreg', (req, res) => {
-	const newUser = req.body["user"];
+app.post('/registration', (req, res) => {
+	const newUser = req.body["name"];
 	const newPswd = req.body["pw"];
 
-	db.run(`INSERT INTO users (userName, userPW) VALUES ('${newUser}', '${newPswd}')`, (error) => {
+	userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${newPswd}')`, (error) => {
 			if (error){
 					console.log(error.message);
+					res.render("error");
 			}
 	});
 	res.redirect('/login');
 });
-*/
+
+/*Delete user*/
+
 app.post('/delete', (req, res) => {
 	const user = req.body["user"];
 
-	db.run(`DELETE FROM users WHERE userName='${user}'`, (error) => {
+	userDB.run(`DELETE FROM user WHERE userName='${user}'`, (error) => {
 			if (error){
 					console.log(error.message);
 			}
 	});
 	res.redirect('/login');
 });
+
+/*Login*/
 
 app.post('/login', function (req, res) {
 	const user = req.body["name"];
 	const password = req.body["pw"];
 
-	userDB.get(`SELECT * FROM users WHERE userName='${user}'`,(error,row)=>{
+	userDB.get(`SELECT * FROM user WHERE userName='${user}'`,(error,row)=>{
 			if (row != undefined){
-					if (password == row.userPW){
+					if (password == row.password){
 							res.render('success', { 'user': user });
 					} else {
 							res.render('error');

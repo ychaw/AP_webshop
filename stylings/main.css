@@ -39,12 +39,12 @@ a {
   font-size: 1.2rem;
   color: #FDDA5E;
 
-  border: 3px solid #2E2608;
+  border: 2px solid #2E2608;
   border-radius: 15px;
 
   margin: 5px;
 
-  padding: 3px;
+  padding: 4px;
 
   cursor: pointer;
 
@@ -53,4 +53,38 @@ a {
 
 .nav-button:hover {
   border-color: #FDDA5E;
+}
+
+.content-box {
+  margin: auto;
+}
+
+.user-box {
+    display:flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+
+    padding: 10px;
+    margin: 10px;
+}
+
+.user-box input {
+  background-color: #FDDA5E;
+
+  margin: 5px;
+  padding: 7px;
+  border: 2px solid #000;
+  border-radius: 15px;
+
+  transition: background-color 0.8s ease;
+}
+
+.user-box input:focus {
+  background-color: #FFF;
+}
+
+.user-box button {
+  display: block;
+
 }
