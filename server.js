@@ -20,7 +20,8 @@ const session = require('express-session');
 app.use(session({
 	secret: 'example',
 	resave: false,
-	saveUninitialized: true
+	saveUninitialized: true,
+	sessionUser: false
 }));
 
 // Passwort Verschlüsselung
@@ -68,9 +69,15 @@ app.get("/newproduct", function(req, res) {
   res.render("newproduct");
 });
 
-app.post("/navigation", function(req, res) {
-	res.redirect(req.body["goTo"]);
+app.get("/delete", function(req, res) {
+	res.render("delete");
 });
+
+app.get("/logout", function(req, res) {
+	sessionUser=false;
+	res.render("logout");
+});
+
 
 /*Register user*/
 
@@ -81,7 +88,7 @@ app.post('/registration', (req, res) => {
 	userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${newPswd}')`, (error) => {
 			if (error){
 					console.log(error.message);
-					res.render("error");
+					res.render("error", {"msg" : error.message});
 			}
 	});
 	res.redirect('/login');
@@ -90,14 +97,36 @@ app.post('/registration', (req, res) => {
 /*Delete user*/
 
 app.post('/delete', (req, res) => {
-	const user = req.body["user"];
+	const user = sessionUser;
+	const password = req.body["pw"];
 
-	userDB.run(`DELETE FROM user WHERE userName='${user}'`, (error) => {
-			if (error){
-					console.log(error.message);
+	userDB.get(`SELECT * FROM user WHERE username='${sessionUser}'`,(error,row)=>{
+			if (row != undefined){
+					if (password == row.password){
+						sessionUser=false;
+
+					} else {
+							res.render('error', {"msg" : "Wrong password"});
+					}
+			} else {
+					res.render('error'), {"msg" : "Row is undefined"};
 			}
+			if(!sessionUser) {
+				console.log("Delete now", user, password);
+				userDB.run(`DELETE FROM user WHERE username='${user}'`, (error) => {
+					console.log("Callback from delete request");
+						if (error){
+								console.log(error.message);
+						}
+						res.redirect('/home');
+				});
+			} else {
+				res.render("error", {"msg" : "Logging out failed"});
+			}
+
+			console.log(sessionUser);
 	});
-	res.redirect('/login');
+
 });
 
 /*Login*/
@@ -106,15 +135,16 @@ app.post('/login', function (req, res) {
 	const user = req.body["name"];
 	const password = req.body["pw"];
 
-	userDB.get(`SELECT * FROM user WHERE userName='${user}'`,(error,row)=>{
+	userDB.get(`SELECT * FROM user WHERE username='${user}'`,(error,row)=>{
 			if (row != undefined){
 					if (password == row.password){
+							sessionUser = user;
 							res.render('success', { 'user': user });
 					} else {
-							res.render('error');
+							res.render('error', {"msg" : "Wrong password"});
 					}
 			} else {
-					res.render('error');
+					res.render('error', {"msg" : "No password found"});
 			}
 	});
 });

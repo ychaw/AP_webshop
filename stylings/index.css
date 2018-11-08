@@ -25,6 +25,14 @@
   font-size: 1.3rem;
 }
 
+#all-items {
+  flex:3;
+}
+
+#basket {
+  flex:2;
+}
+
 .dropdown {
   position:relative;
   display: inline-block;
