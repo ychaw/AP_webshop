@@ -108,7 +108,7 @@ app.post('/registration', (req, res) => {
 		}
 		res.write(`
 			<br>
-			<form action="/regestration" method="GET">
+			<form action="/registration" method="GET">
 					<button type="submit">Try again</button>
 			</form>
 		`);

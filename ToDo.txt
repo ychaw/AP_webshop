@@ -9,4 +9,4 @@ Maybe needs implementation:
   - mail-address for users
 
 Needs fixing:
-  -
+  - Wrong password when deleting account causes crash. Probably async issue
