@@ -82,9 +82,12 @@ app.get("/logout", function(req, res) {
 /*Register user*/
 
 app.post('/registration', (req, res) => {
-	const newUser = req.body["user"];
+	const newUser = req.body["name"];
 	const newPswd1 = req.body["pw1"];
 	const newPswd2 = req.body["pw2"];
+
+	// Array with usernames
+	//let users = userDB.get(``);
 
 	if (newUser in users || newPswd1 != newPswd2 || newUser == '' || newPswd1 == '' || newPswd2 == '') {
 		// error
@@ -114,7 +117,7 @@ app.post('/registration', (req, res) => {
 		`);
 		res.end();
 	} else {
-		db.run(`INSERT INTO users (userName, userPW) VALUES ('${newUser}', '${newPswd}')`, (error) => {
+		userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${newPswd2}')`, (error) => {
 			if (error) {
 				console.log(error.message);
 				res.render("error", {"msg" : error.message});
