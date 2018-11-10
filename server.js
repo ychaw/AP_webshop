@@ -8,8 +8,8 @@ const express = require('express');
 const app = express()
 
 // Body-Parser: wertet POST-Formulare aus
-const bodyParser= require('body-parser')
-app.use(bodyParser.urlencoded({extended: true}))
+const bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // EJS Template Engine
 app.engine('.ejs', require('ejs').__express);
@@ -32,49 +32,49 @@ app.use(express.static(__dirname + "/stylings"));
 app.use(express.static(__dirname + "/js"));
 
 // Webserver starten http://localhost:3000
-app.listen(3000, function(){
+app.listen(3000, function () {
 	console.log("listening on 3000");
 });
 
 // Websites
-app.get("/", function(req, res) {
-  res.redirect("home");
+app.get("/", function (req, res) {
+	res.redirect("home");
 });
 
- //DB erstellen, später auskommentieren
- /*
+//DB erstellen, später auskommentieren
+/*
 app.get("/", (request,response) =>{
-	userDB.run('CREATE TABLE user (id_user INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL)');
-	productDB.run('CREATE TABLE user (id_product INTEGER PRIMARY KEY AUTOINCREMENT, productname TEXT NOT NULL, price TEXT NOT NULL, quantity TEXT NOT NULL)');
+   userDB.run('CREATE TABLE user (id_user INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL)');
+   productDB.run('CREATE TABLE user (id_product INTEGER PRIMARY KEY AUTOINCREMENT, productname TEXT NOT NULL, price TEXT NOT NULL, quantity TEXT NOT NULL)');
 });
 */
 
-app.get("/home", function(req, res) {
-  res.render("index");
+app.get("/home", function (req, res) {
+	res.render("index");
 });
 
-app.get("/login", function(req, res) {
-  res.render("login");
+app.get("/login", function (req, res) {
+	res.render("login");
 });
 
-app.get("/registration", function(req, res) {
-  res.render("registration");
+app.get("/registration", function (req, res) {
+	res.render("registration");
 });
 
-app.get("/checkout", function(req, res) {
-  res.render("checkout");
+app.get("/checkout", function (req, res) {
+	res.render("checkout");
 });
 
-app.get("/newproduct", function(req, res) {
-  res.render("newproduct");
+app.get("/newproduct", function (req, res) {
+	res.render("newproduct");
 });
 
-app.get("/delete", function(req, res) {
+app.get("/delete", function (req, res) {
 	res.render("delete");
 });
 
-app.get("/logout", function(req, res) {
-	sessionUser=false;
+app.get("/logout", function (req, res) {
+	sessionUser = false;
 	res.render("logout");
 });
 
@@ -85,47 +85,34 @@ app.post('/registration', (req, res) => {
 	const newUser = req.body["name"];
 	const newPswd1 = req.body["pw1"];
 	const newPswd2 = req.body["pw2"];
+	let users = [];
 
-	// Array with usernames
-	//let users = userDB.get(``);
+	userDB.all(`SELECT username FROM user`, (error, row) => {
+		if (row != undefined) {
+			users = row.map(getUsername);
+			// users is full
+		} else {
+			res.render('error'), { "msg": "Row is undefined" };
+		}
+	});
+	// users is still empty, needs fix
 
+	console.log(users);
+	// still testing if newUser is in userDB
 	if (newUser in users || newPswd1 != newPswd2 || newUser == '' || newPswd1 == '' || newPswd2 == '') {
-		// error
-		// Hab erstmal das hier eingefügt...
-		// Kannst du natürlich noch schöner machen
-		// Aber so ist erstmal eine Funktionalität vorhanden
-		if (newUser in users) {
-			res.write("<html><body><li>Username is already taken.</li></body></html>");
-		}
-		if (newPswd1 != newPswd2) {
-			res.write("<html><body><li>Passwords are not the same.</li></body></html>");
-		}
-		if (newUser == '') {
-			res.write("<html><body><li>Username is empty.</li></body></html>");
-		}
-		if (newPswd1 == '') {
-			res.write("<html><body><li>First Password is empty.</li></body></html>");
-		}
-		if (newPswd2 == '') {
-			res.write("<html><body><li>Second Password is empty.</li></body></html>");
-		}
-		res.write(`
-			<br>
-			<form action="/registration" method="GET">
-					<button type="submit">Try again</button>
-			</form>
-		`);
-		res.end();
+		// still testing errorCode functionality
+		errorCode (users, newUser, newPswd1, newPswd2);
 	} else {
 		userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${newPswd2}')`, (error) => {
 			if (error) {
 				console.log(error.message);
-				res.render("error", {"msg" : error.message});
+				res.render("error", { "msg": error.message });
 			}
 		});
 		//show successfull registration prompt or something similar. Then redirect to login
 		res.redirect('/login');
 	}
+	res.redirect('/login');
 });
 
 /*Delete user*/
@@ -134,31 +121,31 @@ app.post('/delete', (req, res) => {
 	const user = sessionUser;
 	const password = req.body["pw"];
 
-	userDB.get(`SELECT * FROM user WHERE username='${sessionUser}'`,(error,row)=>{
-			if (row != undefined){
-					if (password == row.password){
-						sessionUser=false;
+	userDB.get(`SELECT * FROM user WHERE username='${sessionUser}'`, (error, row) => {
+		if (row != undefined) {
+			if (password == row.password) {
+				sessionUser = false;
 
-					} else {
-							res.render('error', {"msg" : "Wrong password"});
-					}
 			} else {
-					res.render('error'), {"msg" : "Row is undefined"};
+				res.render('error', { "msg": "Wrong password" });
 			}
-			if(!sessionUser) {
-				console.log("Delete now", user, password);
-				userDB.run(`DELETE FROM user WHERE username='${user}'`, (error) => {
-					console.log("Callback from delete request");
-						if (error){
-								console.log(error.message);
-						}
-						res.redirect('/home');
-				});
-			} else {
-				res.render("error", {"msg" : "Logging out failed"});
-			}
+		} else {
+			res.render('error'), { "msg": "Row is undefined" };
+		}
+		if (!sessionUser) {
+			console.log("Delete now", user, password);
+			userDB.run(`DELETE FROM user WHERE username='${user}'`, (error) => {
+				console.log("Callback from delete request");
+				if (error) {
+					console.log(error.message);
+				}
+				res.redirect('/home');
+			});
+		} else {
+			res.render("error", { "msg": "Logging out failed" });
+		}
 
-			console.log(sessionUser);
+		console.log(sessionUser);
 	});
 
 });
@@ -169,16 +156,51 @@ app.post('/login', function (req, res) {
 	const user = req.body["name"];
 	const password = req.body["pw"];
 
-	userDB.get(`SELECT * FROM user WHERE username='${user}'`,(error,row)=>{
-			if (row != undefined){
-					if (password == row.password){
-							sessionUser = user;
-							res.render('success', { 'user': user });
-					} else {
-							res.render('error', {"msg" : "Wrong password"});
-					}
+	userDB.get(`SELECT * FROM user WHERE username='${user}'`, (error, row) => {
+		if (row != undefined) {
+			if (password == row.password) {
+				sessionUser = user;
+				res.render('success', { 'user': user });
 			} else {
-					res.render('error', {"msg" : "No password found"});
+				res.render('error', { "msg": "Wrong password" });
 			}
+		} else {
+			res.render('error', { "msg": "No password found" });
+		}
 	});
 });
+
+
+
+
+
+
+
+function getUsername(name) {
+	return name.username;
+}
+
+function errorCode (users, newUser, newPswd1, newPswd2) {
+	if (newUser in users) {
+		res.write("<html><body><li>Username is already taken.</li></body></html>");
+	}
+	if (newPswd1 != newPswd2) {
+		res.write("<html><body><li>Passwords are not the same.</li></body></html>");
+	}
+	if (newUser == '') {
+		res.write("<html><body><li>Username is empty.</li></body></html>");
+	}
+	if (newPswd1 == '') {
+		res.write("<html><body><li>First Password is empty.</li></body></html>");
+	}
+	if (newPswd2 == '') {
+		res.write("<html><body><li>Second Password is empty.</li></body></html>");
+	}
+	res.write(`
+		<br>
+		<form action="/registration" method="GET">
+				<button type="submit">Try again</button>
+		</form>
+	`);
+	res.end();
+}
