@@ -1,6 +1,6 @@
 Needs implementation:
-  - password hash
-  - session variables to store login-status, admin-rights, items in basket
+  - (password hash)
+  - session variables to store admin-rights, items in basket
   - file upload
   - item display
 
@@ -8,4 +8,4 @@ Maybe needs implementation:
   - mail-address for users
 
 Needs fixing:
-  - Wrong password when deleting account causes crash. Probably async issue
+  -

@@ -10,44 +10,35 @@ a {
 }
 
 .container {
-  display:flex;
+  display: flex;
   flex-direction: column;
   align-content: center;
   justify-content: center;
-  margin:0px;
+  margin: 0px;
 }
 
 .header {
-  display:flex;
+  display: flex;
   flex-direction: row;
   align-content: center;
   justify-content: center;
-  min-width: 100%
-  overflow:auto;
-  margin:0;
+  min-width: 100% overflow:auto;
+  margin: 0;
   padding: 5px;
-
   background-color: #F3BF04;
-
   margin-bottom: 5px;
 }
 
 .nav-button {
   background-color: #2E2608;
-
   font-family: "OpenSans", sans-serif;
   font-size: 1.2rem;
   color: #FDDA5E;
-
   border: 2px solid #2E2608;
-  border-radius: 15px;
-
-  margin: 5px;
-
-  padding: 4px;
-
+  border-radius: 13px;
+  margin: 10px;
+  padding: 5px;
   cursor: pointer;
-
   transition: border-color 0.8s ease;
 }
 
@@ -60,23 +51,20 @@ a {
 }
 
 .user-box {
-    display:flex;
-    flex-direction: row;
-    align-content: center;
-    justify-content: center;
-
-    padding: 10px;
-    margin: 10px;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  padding: 10px;
+  margin: 10px;
 }
 
 .user-box input {
   background-color: #FDDA5E;
-
   margin: 5px;
   padding: 7px;
   border: 2px solid #000;
   border-radius: 15px;
-
   transition: background-color 0.8s ease;
 }
 
@@ -86,5 +74,4 @@ a {
 
 .user-box button {
   display: block;
-
 }

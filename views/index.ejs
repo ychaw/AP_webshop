@@ -1,47 +1,58 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Home</title>
-        <link rel="stylesheet" type="text/css" href="main.css">
-        <link rel="stylesheet" type="text/css" href="index.css">
-    </head>
 
-    <body class="container">
-      <div class="header">
-        <div class="dropdown">
+<head>
+  <title>Home</title>
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <link rel="stylesheet" type="text/css" href="index.css">
+</head>
 
-          <button onClick="toggleDropdown()" class="nav-menu-button">Navigation</button>
+<body class="container">
+  <div class="header">
+    <a class="nav-button" href="/login">Login</a>
+    <a class="nav-button" href="/registration">Registration</a>
 
-          <div id="navDropdown" class="navigation">
-            <a class="nav-button" href="/login">Login</a>
-            <a class="nav-button" href="/registration">Registration</a>
-            <a class="nav-button" href="/checkout">Checkout</a>
+    <form action="/searchItem" method="post">
+      <input class="search-bar-input" type="text" id="articelName" name="articelName" placeholder="Search..."> <br>
+    </form>
+
+    <a class="nav-button" href="/checkout">Checkout</a>
+
+  </div>
+  <div class="middle-box">
+    <div class="list-wrapper" id="all-items">
+      <h2 class="list-heading">Items in store</h2>
+      <ul class="all-item-list">
+        <% for(var i = 0; i < allItems.length; i++) { %>
+        <li class=" list-entry">
+          <div class="left">
+            <%= allItems[i].productname %><br>
+            <%= allItems[i].price %>€<br>
+            <%=allItems[i].quantity %> in store<br>
           </div>
-
-        </div>
-
-        <form action="/searchItem" method="post">
-          <input class="search-bar-input" type="text" id="articelName" name="articelName" placeholder="Search..."> <br>
-        </form>
-
-    </div>
-    <div class="middle-box">
-      <ul class= "all-item-list" id="all-items">
-        <div class="list-heading">Show items here</div>
-        <li class="list-entry">test</li>
-        <li class="list-entry">test</li>
-        <li class="list-entry">test</li>
-      </ul>
-
-      <ul class= "all-item-list" id="basket">
-        <div class="list-heading">Basket</div>
-        <li class="list-entry">test</li>
-        <li class="list-entry">test</li>
-        <li class="list-entry">test</li>
+          <img src="test.png" alt="Your browser can't display this image!"><br>
+          <button class="add-button">Add to basket</button>
+        </li>
+        <%}%>
       </ul>
     </div>
+
+    <div class="list-wrapper" id="basket">
+      <h2 class="list-heading">Basket</h2>
+      <ul class="all-item-list">
+        <% for(var i = 0; i < basket.length; i++) { %>
+        <li class="list-entry">
+          <%= basket[i].productname %><br>
+          <%= basket[i].price %><br>
+          <%= basket[i].quantity %><br>
+        </li>
+        <%}%>
+      </ul>
+    </div>
+  </div>
 
   <script src="dropdown.js"></script>
 
 </body>
+
 </html>

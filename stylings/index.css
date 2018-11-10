@@ -3,17 +3,22 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+}
 
+.list-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 15px;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #F3BF04;
 }
 
 .all-item-list {
-  margin: 15px;
-  padding: 10px;
-  border-radius: 15px;
-  background-color: #F3BF04;
-
+  display: flex;
+  flex-direction: column;
   list-style-type: none;
-
 }
 
 .list-heading {
@@ -22,19 +27,49 @@
 }
 
 .list-entry {
+  display: flex;
+  flex-direction: row;
+  background-color: #FDDA5E;
+  border-radius: 15px;
   font-size: 1.3rem;
+  margin: 5px;
+  padding: 5px;
+}
+
+.list-entry .left {
+  flex: 3;
+  padding: 10px;
+}
+
+.list-entry img {
+  flex: 2;
+  height: 100px;
+  width: 100px;
 }
 
 #all-items {
-  flex:3;
+  flex: 3;
 }
 
 #basket {
-  flex:2;
+  flex: 2;
+}
+
+.add-button {
+  height: 40px;
+  color: #FDDA5E;
+  background-color: #2E2608;
+  border: none;
+  border-radius: 15px;
+  padding: 5px;
+  margin: 10px;
+  font-size: 16px;
+  font-family: Helvetica, sans-serif;
+  cursor: pointer;
 }
 
 .dropdown {
-  position:relative;
+  position: relative;
   display: inline-block;
 }
 
@@ -44,34 +79,24 @@
   background-color: #F3BF04;
   min-width: 100%;
   overflow: auto;
-
   width: 10rem;
   height: 10rem;
-
-  box-shadow: 16px 8px 16px 0px rgba(0,0,0,0.2);
-
+  box-shadow: 16px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
-
 }
 
 .nav-menu-button {
   background-color: #2E2608;
-
   font-family: "OpenSans", sans-serif;
   font-size: 1.2rem;
   color: #FDDA5E;
-
   border: 3px #2E2608 solid;
   border-radius: 15px;
-
   margin: 10px;
-
   padding: 5px;
-
   cursor: pointer;
-
   transition: border-color 0.8s ease;
-  display:block;
+  display: block;
   overflow: visible;
 }
 
@@ -80,7 +105,7 @@
 }
 
 .show {
-  display:flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -92,13 +117,10 @@
   margin-top: 0.7rem;
   padding: 5px;
   overflow: auto;
-
   background-color: #FDDA5E;
-  border:none;
+  border: none;
   border-radius: 15px;
-
   transition: background-color 0.8s ease;
-
 }
 
 .search-bar-input:focus {
