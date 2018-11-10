@@ -1,6 +1,5 @@
 Needs implementation:
   - password hash
-  - account deletion (possibly just refactor)
   - session variables to store login-status, admin-rights, items in basket
   - file upload
   - item display

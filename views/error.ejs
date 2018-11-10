@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Error</title>
-        <link rel="stylesheet" type="text/css" href="main.css">
-        <link rel="stylesheet" type="text/css" href="error.css">
-    </head>
-    <body class="container">
-      <div class="header">
-        <a class="nav-button" href="/home">Home</a>
-      </div>
-      <div class="content-box">
-          <h1>Something went wrong!</h1>
-          <p><%= msg%></p>
-          <a class="nav-button" href="/login">Back to login</a>
-      </div>
-    </body>
+
+<head>
+  <title>Error</title>
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <link rel="stylesheet" type="text/css" href="error.css">
+</head>
+
+<body class="container">
+  <div class="header">
+    <a class="nav-button" href="/home">Home</a>
+  </div>
+  <div class="content-box">
+    <h1>Something went wrong!</h1>
+    <p>
+      <%= msg%>
+    </p>
+    <a class="nav-button" href="/login">Back to login</a>
+  </div>
+</body>
+
 </html>
