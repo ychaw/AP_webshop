@@ -40,12 +40,12 @@ app.use(express.static(__dirname + "/js"));
 app.use(express.static(__dirname + "/img"));
 
 // Webserver starten http://localhost:3000
-app.listen(3000, function() {
+app.listen(3000, function () {
   console.log("listening on 3000");
 });
 
 // Websites
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.redirect("home");
 });
 
@@ -57,13 +57,13 @@ app.get("/", (request,response) =>{
 });
 */
 
-app.get("/home", function(req, res) {
+app.get("/home", function (req, res) {
   const sql = 'SELECT * FROM products';
 
   //for testing, set to false if user view is needed
   req.session.isAdmin = true;
 
-  productDB.all(sql, function(error, rows) {
+  productDB.all(sql, function (error, rows) {
     if (error) {
       console.log(error.message);
     } else {
@@ -82,27 +82,27 @@ app.get("/home", function(req, res) {
   })
 });
 
-app.get("/login", function(req, res) {
+app.get("/login", function (req, res) {
   res.render("login");
 });
 
-app.get("/registration", function(req, res) {
+app.get("/registration", function (req, res) {
   res.render("registration");
 });
 
-app.get("/checkout", function(req, res) {
+app.get("/checkout", function (req, res) {
   res.render("checkout");
 });
 
-app.get("/newproduct", function(req, res) {
+app.get("/newproduct", function (req, res) {
   res.render("newproduct");
 });
 
-app.get("/delete", function(req, res) {
+app.get("/delete", function (req, res) {
   res.render("delete");
 });
 
-app.get("/logout", function(req, res) {
+app.get("/logout", function (req, res) {
   sessionUser = false;
   isAdmin = false;
   res.render("logout");
@@ -115,38 +115,64 @@ app.post('/registration', (req, res) => {
   const newUser = req.body["name"];
   const newPswd1 = req.body["pw1"];
   const newPswd2 = req.body["pw2"];
-  let users = [];
+  var hashedPswd = false;
+  var nameTaken = false;
 
-  userDB.all(`SELECT username FROM user`, (error, row) => {
+  // error
+  if (newPswd1 != newPswd2) {
+    res.render("error", {
+      "msg": "Passwords are not the same."
+    });
+  }
+  if (newUser == '') {
+    res.render("error", {
+      "msg": "Username is empty."
+    });
+  }
+  if (newPswd1 == '') {
+    res.render("error", {
+      "msg": "First Password is empty."
+    });
+  }
+  if (newPswd2 == '') {
+    res.render("error", {
+      "msg": "Second Password is empty."
+    });
+  }
+
+  userDB.get(`SELECT * FROM user WHERE username='${newUser}'`, (error, row) => {
+    if (error) {
+      console.log(error.message);
+    }
+    // error
     if (row != undefined) {
-      users = row.map(getUsername);
-      // users is full
+      res.render("error", {
+        "msg": "Username is already taken."
+      });
     } else {
-      res.render('error'), {
-        "msg": "Row is undefined"
-      };
+      bcrypt.hash(newPswd1, saltRounds, function (error, hash) {
+        console.log(hashedPswd);
+        if (error) {
+          console.log(error.message);
+          res.render("error", {
+            "msg": error.message
+          });
+        }
+        hashedPswd = hash;
+        console.log(hashedPswd);
+        userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${hashedPswd}')`, (error) => {
+          if (error) {
+            console.log(error.message);
+            res.render("error", {
+              "msg": error.message
+            });
+          }
+        });
+        //show successfull registration prompt or something similar. Then redirect to login
+        res.redirect('/login');
+      });
     }
   });
-  // users is still empty, needs fix
-
-  console.log(users);
-  // still testing if newUser is in userDB
-  if (newUser in users || newPswd1 != newPswd2 || newUser == '' || newPswd1 == '' || newPswd2 == '') {
-    // still testing errorCode functionality
-    errorCode(users, newUser, newPswd1, newPswd2);
-  } else {
-    userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${newPswd2}')`, (error) => {
-      if (error) {
-        console.log(error.message);
-        res.render("error", {
-          "msg": error.message
-        });
-      }
-    });
-    //show successfull registration prompt or something similar. Then redirect to login
-    res.redirect('/login');
-  }
-  res.redirect('/login');
 });
 
 /*Delete user*/
@@ -157,34 +183,29 @@ app.post('/delete', (req, res) => {
 
   userDB.get(`SELECT * FROM user WHERE username='${sessionUser}'`, (error, row) => {
     if (row != undefined) {
-      if (password == row.password) {
-        sessionUser = false;
-
-      } else {
-        res.render('error', {
-          "msg": "Wrong password"
-        });
-      }
+      const hash = row.password;
+      bcrypt.compare(password, hash, function (error, isCorrect) {
+        if (isCorrect) {
+          sessionUser = false;
+          console.log("Delete now", user, password);
+          userDB.run(`DELETE FROM user WHERE username='${user}'`, (error) => {
+            console.log("Callback from delete request");
+            if (error) {
+              console.log(error.message);
+            }
+            res.redirect('/home');
+          });
+        } else {
+          res.render('error', {
+            "msg": "Wrong password"
+          });
+        }
+      });
     } else {
       res.render('error'), {
         "msg": "Row is undefined"
       };
     }
-    if (!sessionUser) {
-      console.log("Delete now", user, password);
-      userDB.run(`DELETE FROM user WHERE username='${user}'`, (error) => {
-        console.log("Callback from delete request");
-        if (error) {
-          console.log(error.message);
-        }
-        res.redirect('/home');
-      });
-    } else {
-      res.render("error", {
-        "msg": "Logging out failed"
-      });
-    }
-
     console.log(sessionUser);
   });
 
@@ -192,28 +213,27 @@ app.post('/delete', (req, res) => {
 
 /*Login*/
 
-app.post('/login', function(req, res) {
+app.post('/login', function (req, res) {
   const user = req.body["name"];
   const password = req.body["pw"];
-
   userDB.get(`SELECT * FROM user WHERE username='${user}'`, (error, row) => {
     if (row != undefined) {
-      if (password == row.password) {
-        sessionUser = user;
-        if (user == "admin") {
-          isAdmin = true;
+      const hash = row.password;
+      bcrypt.compare(password, hash, function (error, isCorrect) {
+        if (isCorrect) {
+          sessionUser = user;
+          res.render('success', {
+            'user': user
+          });
+        } else {
+          res.render('error', {
+            "msg": "Wrong password"
+          });
         }
-        res.render('success', {
-          'user': user
-        });
-      } else {
-        res.render('error', {
-          "msg": "Wrong password"
-        });
-      }
+      });
     } else {
       res.render('error', {
-        "msg": "No password found"
+        "msg": "Name or password not found"
       });
     }
   });
@@ -223,11 +243,11 @@ app.post('/login', function(req, res) {
 https://www.npmjs.com/package/express-fileupload
 */
 
-app.post("/addItem", function(req, res) {
+app.post("/addItem", function (req, res) {
 
 });
 
-app.post("/restockItem", function(req, res) {
+app.post("/restockItem", function (req, res) {
 
 });
 
