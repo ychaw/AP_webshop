@@ -126,3 +126,12 @@
 .search-bar-input:focus {
   background-color: #FFF;
 }
+
+#file-upload {
+  display: none;
+  cursor: pointer;
+}
+
+.nav-button .container {
+  align-items: center;
+}

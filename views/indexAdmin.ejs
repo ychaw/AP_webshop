@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Home</title>
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+
+<body class="container">
+  <div class="header">
+    <a class="nav-button" href="/Logout">Logout</a>
+
+    <form action="/searchItem" method="post">
+      <input class="search-bar-input" type="text" id="articelName" name="articelName" placeholder="Search..."> <br>
+    </form>
+
+  </div>
+  <div class="middle-box">
+    <div class="list-wrapper" id="all-items">
+      <h2 class="list-heading">Items in store</h2>
+      <ul class="all-item-list">
+        <% for(var i = 0; i < allItems.length; i++) { %>
+        <li class=" list-entry">
+          <div class="left">
+            <%= allItems[i].productname %><br>
+            <%= allItems[i].price %>€<br>
+            <%=allItems[i].quantity %> in store<br>
+          </div>
+          <img src="test.png" alt="Your browser can't display this image!"><br>
+        </li>
+        <%}%>
+      </ul>
+    </div>
+
+    <div class="list-wrapper">
+      <h2 class="list-heading">Add item</h2>
+      <form class="all-item-list" action="addItem" method="post">
+        <input class="search-bar-input" type="text" name="item-name" placeholder="Item name">
+        <input class="search-bar-input" type="text" name="item-price" placeholder="Price">
+        <input class="search-bar-input" type="text" name="item-quantity" placeholder="Quantity">
+        <label for="file-upload" class="nav-button">
+          <div class="container">
+            Select picture
+          </div>
+        </label>
+        <input id="file-upload" type="file" name="item-picture">
+        <button class="nav-button" type="submit" name="Upload">Upload</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="dropdown.js"></script>
+
+</body>
+
+</html>

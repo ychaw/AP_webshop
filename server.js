@@ -24,7 +24,9 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   sessionUser: false,
-  basket: []
+  basket: [],
+  //for testing, set to false initially
+  isAdmin: true
 }));
 
 // Passwort Verschlüsselung
@@ -58,14 +60,24 @@ app.get("/", (request,response) =>{
 app.get("/home", function(req, res) {
   const sql = 'SELECT * FROM products';
 
+  //for testing, set to false if user view is needed
+  req.session.isAdmin = true;
+
   productDB.all(sql, function(error, rows) {
     if (error) {
       console.log(error.message);
     } else {
-      res.render('index', {
-        'allItems': rows || [],
-        'basket': req.session.basket || []
-      });
+      if (req.session.isAdmin) {
+        res.render('indexAdmin', {
+          'allItems': rows || [],
+          'basket': req.session.basket || []
+        });
+      } else {
+        res.render('index', {
+          'allItems': rows || [],
+          'basket': req.session.basket || []
+        });
+      }
     }
   })
 });
@@ -92,6 +104,7 @@ app.get("/delete", function(req, res) {
 
 app.get("/logout", function(req, res) {
   sessionUser = false;
+  isAdmin = false;
   res.render("logout");
 });
 
@@ -187,6 +200,9 @@ app.post('/login', function(req, res) {
     if (row != undefined) {
       if (password == row.password) {
         sessionUser = user;
+        if (user == "admin") {
+          isAdmin = true;
+        }
         res.render('success', {
           'user': user
         });
@@ -203,7 +219,13 @@ app.post('/login', function(req, res) {
   });
 });
 
+/*Add item
+https://www.npmjs.com/package/express-fileupload
+*/
 
+app.post("/addItem", function(req, res) {
+
+});
 
 
 
