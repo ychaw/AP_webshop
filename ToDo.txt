@@ -1,8 +1,7 @@
 Needs implementation:
   - (password hash)
-  - session variables to store admin-rights, items in basket
   - file upload
-  - item display
+  - (item display)
 
 Maybe needs implementation:
   - mail-address for users
