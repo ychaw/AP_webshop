@@ -227,6 +227,10 @@ app.post("/addItem", function(req, res) {
 
 });
 
+app.post("/restockItem", function(req, res) {
+
+});
+
 
 
 
