@@ -31,20 +31,20 @@
             <%=allItems[i].quantity %> in store<br>
           </div>
           <img src="test.png" alt="Your browser can't display this image!"><br>
-          <button class="add-button">Add to basket</button>
+          <button class="add-button">Add to Cart</button>
         </li>
         <%}%>
       </ul>
     </div>
 
-    <div class="list-wrapper" id="basket">
-      <h2 class="list-heading">Basket</h2>
+    <div class="list-wrapper" id="cart">
+      <h2 class="list-heading">Cart</h2>
       <ul class="all-item-list">
-        <% for(var i = 0; i < basket.length; i++) { %>
+        <% for(var i = 0; i < cart.length; i++) { %>
         <li class="list-entry">
-          <%= basket[i].productname %><br>
-          <%= basket[i].price %><br>
-          <%= basket[i].quantity %><br>
+          <%= cart[i].productname %><br>
+          <%= cart[i].price %><br>
+          <%= cart[i].quantity %><br>
         </li>
         <%}%>
       </ul>

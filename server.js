@@ -24,7 +24,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   sessionUser: false,
-  basket: [],
+  cart: [],
   //for testing, set to false initially
   isAdmin: true
 }));
@@ -40,12 +40,12 @@ app.use(express.static(__dirname + "/js"));
 app.use(express.static(__dirname + "/img"));
 
 // Webserver starten http://localhost:3000
-app.listen(3000, function () {
+app.listen(3000, function() {
   console.log("listening on 3000");
 });
 
 // Websites
-app.get("/", function (req, res) {
+app.get("/", function(req, res) {
   res.redirect("home");
 });
 
@@ -57,52 +57,52 @@ app.get("/", (request,response) =>{
 });
 */
 
-app.get("/home", function (req, res) {
+app.get("/home", function(req, res) {
   const sql = 'SELECT * FROM products';
 
   //for testing, set to false if user view is needed
-  req.session.isAdmin = true;
+  req.session.isAdmin = false;
 
-  productDB.all(sql, function (error, rows) {
+  productDB.all(sql, function(error, rows) {
     if (error) {
       console.log(error.message);
     } else {
       if (req.session.isAdmin) {
         res.render('indexAdmin', {
           'allItems': rows || [],
-          'basket': req.session.basket || []
+          'cart': req.session.cart || []
         });
       } else {
         res.render('index', {
           'allItems': rows || [],
-          'basket': req.session.basket || []
+          'cart': req.session.cart || []
         });
       }
     }
   })
 });
 
-app.get("/login", function (req, res) {
+app.get("/login", function(req, res) {
   res.render("login");
 });
 
-app.get("/registration", function (req, res) {
+app.get("/registration", function(req, res) {
   res.render("registration");
 });
 
-app.get("/checkout", function (req, res) {
+app.get("/checkout", function(req, res) {
   res.render("checkout");
 });
 
-app.get("/newproduct", function (req, res) {
+app.get("/newproduct", function(req, res) {
   res.render("newproduct");
 });
 
-app.get("/delete", function (req, res) {
+app.get("/delete", function(req, res) {
   res.render("delete");
 });
 
-app.get("/logout", function (req, res) {
+app.get("/logout", function(req, res) {
   sessionUser = false;
   isAdmin = false;
   res.render("logout");
@@ -150,7 +150,7 @@ app.post('/registration', (req, res) => {
         "msg": "Username is already taken."
       });
     } else {
-      bcrypt.hash(newPswd1, saltRounds, function (error, hash) {
+      bcrypt.hash(newPswd1, saltRounds, function(error, hash) {
         console.log(hashedPswd);
         if (error) {
           console.log(error.message);
@@ -184,7 +184,7 @@ app.post('/delete', (req, res) => {
   userDB.get(`SELECT * FROM user WHERE username='${sessionUser}'`, (error, row) => {
     if (row != undefined) {
       const hash = row.password;
-      bcrypt.compare(password, hash, function (error, isCorrect) {
+      bcrypt.compare(password, hash, function(error, isCorrect) {
         if (isCorrect) {
           sessionUser = false;
           console.log("Delete now", user, password);
@@ -213,13 +213,13 @@ app.post('/delete', (req, res) => {
 
 /*Login*/
 
-app.post('/login', function (req, res) {
+app.post('/login', function(req, res) {
   const user = req.body["name"];
   const password = req.body["pw"];
   userDB.get(`SELECT * FROM user WHERE username='${user}'`, (error, row) => {
     if (row != undefined) {
       const hash = row.password;
-      bcrypt.compare(password, hash, function (error, isCorrect) {
+      bcrypt.compare(password, hash, function(error, isCorrect) {
         if (isCorrect) {
           sessionUser = user;
           res.render('success', {
@@ -243,11 +243,11 @@ app.post('/login', function (req, res) {
 https://www.npmjs.com/package/express-fileupload
 */
 
-app.post("/addItem", function (req, res) {
+app.post("/addItem", function(req, res) {
 
 });
 
-app.post("/restockItem", function (req, res) {
+app.post("/restockItem", function(req, res) {
 
 });
 
