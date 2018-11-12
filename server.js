@@ -33,12 +33,6 @@ app.use(session({
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-//Session variables
-let cart = [];
-//for testing, set to false initially
-let isAdmin = true;
-
-
 //Include CSS and JS directories
 app.use(express.static(__dirname + "/stylings"));
 app.use(express.static(__dirname + "/js"));
@@ -68,11 +62,18 @@ app.get("/home", function(req, res) {
 
   //for testing, set to false if user view is needed
   req.session.isAdmin = false;
+  console.log(req.session.sessionUser);
 
   productDB.all(sql, function(error, rows) {
     if (error) {
       console.log(error.message);
     } else {
+
+      //redundant, but leave until tested
+      if (!req.session.cart) {
+        req.session.cart = [];
+      }
+
       if (req.session.isAdmin) {
         res.render('indexAdmin', {
           'allItems': rows || [],
@@ -81,7 +82,8 @@ app.get("/home", function(req, res) {
       } else {
         res.render('index', {
           'allItems': rows || [],
-          'cart': req.session.cart || []
+          'cart': req.session.cart || [],
+          'user': req.session.sessionUser
         });
       }
     }
@@ -118,7 +120,7 @@ app.get("/delete", function(req, res) {
 });
 
 app.get("/logout", function(req, res) {
-  sessionUser = false;
+  req.session.sessionUser = false;
   isAdmin = false;
   res.render("logout");
 });
@@ -192,15 +194,15 @@ app.post('/registration', (req, res) => {
 /*Delete user*/
 
 app.post('/delete', (req, res) => {
-  const user = sessionUser;
+  const user = req.session.sessionUser;
   const password = req.body["pw"];
 
-  userDB.get(`SELECT * FROM user WHERE username='${sessionUser}'`, (error, row) => {
+  userDB.get(`SELECT * FROM user WHERE username='${req.session.sessionUser}'`, (error, row) => {
     if (row != undefined) {
       const hash = row.password;
       bcrypt.compare(password, hash, function(error, isCorrect) {
         if (isCorrect) {
-          sessionUser = false;
+          req.session.sessionUser = false;
           console.log("Delete now", user, password);
           userDB.run(`DELETE FROM user WHERE username='${user}'`, (error) => {
             console.log("Callback from delete request");
@@ -220,7 +222,7 @@ app.post('/delete', (req, res) => {
         "msg": "Row is undefined"
       };
     }
-    console.log(sessionUser);
+    console.log(req.session.sessionUser);
   });
 
 });
@@ -235,7 +237,7 @@ app.post('/login', function(req, res) {
       const hash = row.password;
       bcrypt.compare(password, hash, function(error, isCorrect) {
         if (isCorrect) {
-          sessionUser = user;
+          req.session.sessionUser = user;
           res.render('success', {
             'user': user
           });

@@ -9,9 +9,15 @@
 
 <body class="container">
   <div class="header">
+    <% if(user){%>
+    <p>Logged in as
+      <%= user %>
+    </p>
+    <a class="nav-button" href="/logout">Logout</a>
+    <%} else {%>
     <a class="nav-button" href="/login">Login</a>
     <a class="nav-button" href="/registration">Registration</a>
-
+    <%}%>
     <form action="/searchItem" method="post">
       <input class="search-bar-input" type="text" id="articelName" name="articelName" placeholder="Search..."> <br>
     </form>
