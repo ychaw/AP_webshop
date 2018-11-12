@@ -277,6 +277,4 @@ app.post("/restockItem", function(req, res) {
   const item_name = req.body["item-name"];
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
-
-
 });
