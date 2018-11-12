@@ -247,11 +247,27 @@ app.post("/addItem", function (req, res) {
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
 
-  productDB.run(`INSERT INTO products (productname, price, quantity) VALUES ('${item_name}', '${item_price}', ${item_quantity})`, (error) => {
+  productDB.all(`SELECT * FROM products WHERE productname='${item_name}'`, function (error, rows) {
     if (error) {
       console.log(error.message);
       res.render("error", {
         "msg": error.message
+      });
+    }
+    if (rows.length != 0) {
+        res.render("error", {
+          "msg": "Product already exists."
+        });
+    } else {
+      productDB.run(`INSERT INTO products (productname, price, quantity) VALUES ('${item_name}', '${item_price}', ${item_quantity})`, (error) => {
+        if (error) {
+          console.log(error.message);
+          res.render("error", {
+            "msg": error.message
+          });
+        } else {
+          res.redirect("home");
+        }
       });
     }
   });
@@ -261,4 +277,6 @@ app.post("/restockItem", function (req, res) {
   const item_name = req.body["item-name"];
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
+
+
 });
