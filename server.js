@@ -242,14 +242,10 @@ app.post('/login', function(req, res) {
 https://www.npmjs.com/package/express-fileupload
 */
 
-<<<<<<< HEAD
-app.post("/addItem", function(req, res) {
-=======
 app.post("/addItem", function (req, res) {
   const item_name = req.body["item-name"];
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
->>>>>>> 67a0cb764213dc4de87ffb007fb6900b88887fca
 
   productDB.all(`SELECT * FROM products WHERE productname='${item_name}'`, function (error, rows) {
     if (error) {
@@ -277,17 +273,8 @@ app.post("/addItem", function (req, res) {
   });
 });
 
-<<<<<<< HEAD
-app.post("/restockItem", function(req, res) {
-
-});
-
-=======
 app.post("/restockItem", function (req, res) {
   const item_name = req.body["item-name"];
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
->>>>>>> 67a0cb764213dc4de87ffb007fb6900b88887fca
-
-
 });
