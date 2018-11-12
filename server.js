@@ -33,6 +33,12 @@ app.use(session({
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+//Session variables
+let cart = [];
+//for testing, set to false initially
+let isAdmin = true;
+
+
 //Include CSS and JS directories
 app.use(express.static(__dirname + "/stylings"));
 app.use(express.static(__dirname + "/js"));
@@ -91,7 +97,16 @@ app.get("/registration", function(req, res) {
 });
 
 app.get("/checkout", function(req, res) {
-  res.render("checkout");
+  console.log(typeof req.session.cart);
+  req.session.cart = [];
+  req.session.cart.push({
+    productname: "test",
+    price: "0.99",
+    quantity: "3"
+  });
+  res.render("checkout", {
+    "cart": req.session.cart || []
+  });
 });
 
 app.get("/newproduct", function(req, res) {
