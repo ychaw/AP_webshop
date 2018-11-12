@@ -99,11 +99,11 @@ app.get("/registration", function(req, res) {
 app.get("/checkout", function(req, res) {
   console.log(typeof req.session.cart);
   req.session.cart = [];
-  req.session.cart.push({
-    productname: "test",
-    price: "0.99",
-    quantity: "3"
-  });
+  // req.session.cart.push({
+  //   productname: "test",
+  //   price: "0.99",
+  //   quantity: "3"
+  // });
   res.render("checkout", {
     "cart": req.session.cart || []
   });

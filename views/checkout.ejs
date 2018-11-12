@@ -16,9 +16,7 @@
   <div class="list-wrapper" id="cart">
     <h2 class="list-heading">Cart</h2>
     <ul class="all-item-list">
-      <% if(cart == [] || typeof cart == "undefined" || !cart) { %>
-      <%= "Your cart is empty." %>
-      <%} else {%>
+      <% if(cart && cart.length > 1) { %>
       <% for(var i = 0; i < cart.length; i++) { %>
       <li class="list-entry">
         <%= cart[i].productname %><br>
@@ -26,6 +24,8 @@
         <%= cart[i].quantity %><br>
       </li>
       <%}%>
+      <%} else {%>
+      <p>Your cart is empty.</p>
       <%}%>
     </ul>
   </div>
