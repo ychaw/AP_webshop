@@ -116,7 +116,6 @@ app.post('/registration', (req, res) => {
   const newPswd1 = req.body["pw1"];
   const newPswd2 = req.body["pw2"];
   var hashedPswd = false;
-  var nameTaken = false;
 
   // error
   if (newPswd1 != newPswd2) {
@@ -244,42 +243,22 @@ https://www.npmjs.com/package/express-fileupload
 */
 
 app.post("/addItem", function (req, res) {
+  const item_name = req.body["item-name"];
+  const item_price = req.body["item-price"];
+  const item_quantity = req.body["item-quantity"];
 
+  productDB.run(`INSERT INTO products (productname, price, quantity) VALUES ('${item_name}', '${item_price}', ${item_quantity})`, (error) => {
+    if (error) {
+      console.log(error.message);
+      res.render("error", {
+        "msg": error.message
+      });
+    }
+  });
 });
 
 app.post("/restockItem", function (req, res) {
-
+  const item_name = req.body["item-name"];
+  const item_price = req.body["item-price"];
+  const item_quantity = req.body["item-quantity"];
 });
-
-
-
-
-
-function getUsername(name) {
-  return name.username;
-}
-
-function errorCode(users, newUser, newPswd1, newPswd2) {
-  if (newUser in users) {
-    res.write("<html><body><li>Username is already taken.</li></body></html>");
-  }
-  if (newPswd1 != newPswd2) {
-    res.write("<html><body><li>Passwords are not the same.</li></body></html>");
-  }
-  if (newUser == '') {
-    res.write("<html><body><li>Username is empty.</li></body></html>");
-  }
-  if (newPswd1 == '') {
-    res.write("<html><body><li>First Password is empty.</li></body></html>");
-  }
-  if (newPswd2 == '') {
-    res.write("<html><body><li>Second Password is empty.</li></body></html>");
-  }
-  res.write(`
-		<br>
-		<form action="/registration" method="GET">
-				<button type="submit">Try again</button>
-		</form>
-	`);
-  res.end();
-}
