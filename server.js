@@ -40,12 +40,12 @@ app.use(express.static(__dirname + "/js"));
 app.use(express.static(__dirname + "/img"));
 
 // Webserver starten http://localhost:3000
-app.listen(3000, function() {
+app.listen(3000, function () {
   console.log("listening on 3000");
 });
 
 // Websites
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.redirect("home");
 });
 
@@ -57,14 +57,14 @@ app.get("/", (request,response) =>{
 });
 */
 
-app.get("/home", function(req, res) {
+app.get("/home", function (req, res) {
   const sql = 'SELECT * FROM products';
 
   //for testing, set to false if user view is needed
   req.session.isAdmin = false;
   console.log(req.session.sessionUser);
 
-  productDB.all(sql, function(error, rows) {
+  productDB.all(sql, function (error, rows) {
     if (error) {
       console.log(error.message);
     } else {
@@ -90,15 +90,15 @@ app.get("/home", function(req, res) {
   });
 });
 
-app.get("/login", function(req, res) {
+app.get("/login", function (req, res) {
   res.render("login");
 });
 
-app.get("/registration", function(req, res) {
+app.get("/registration", function (req, res) {
   res.render("registration");
 });
 
-app.get("/checkout", function(req, res) {
+app.get("/checkout", function (req, res) {
   console.log(typeof req.session.cart);
   req.session.cart = [];
   // req.session.cart.push({
@@ -111,15 +111,15 @@ app.get("/checkout", function(req, res) {
   });
 });
 
-app.get("/newproduct", function(req, res) {
+app.get("/newproduct", function (req, res) {
   res.render("newproduct");
 });
 
-app.get("/delete", function(req, res) {
+app.get("/delete", function (req, res) {
   res.render("delete");
 });
 
-app.get("/logout", function(req, res) {
+app.get("/logout", function (req, res) {
   req.session.sessionUser = false;
   isAdmin = false;
   res.render("logout");
@@ -166,7 +166,7 @@ app.post('/registration', (req, res) => {
         "msg": "Username is already taken."
       });
     } else {
-      bcrypt.hash(newPswd1, saltRounds, function(error, hash) {
+      bcrypt.hash(newPswd1, saltRounds, function (error, hash) {
         console.log(hashedPswd);
         if (error) {
           console.log(error.message);
@@ -200,7 +200,7 @@ app.post('/delete', (req, res) => {
   userDB.get(`SELECT * FROM user WHERE username='${req.session.sessionUser}'`, (error, row) => {
     if (row != undefined) {
       const hash = row.password;
-      bcrypt.compare(password, hash, function(error, isCorrect) {
+      bcrypt.compare(password, hash, function (error, isCorrect) {
         if (isCorrect) {
           req.session.sessionUser = false;
           console.log("Delete now", user, password);
@@ -229,13 +229,13 @@ app.post('/delete', (req, res) => {
 
 /*Login*/
 
-app.post('/login', function(req, res) {
+app.post('/login', function (req, res) {
   const user = req.body["name"];
   const password = req.body["pw"];
   userDB.get(`SELECT * FROM user WHERE username='${user}'`, (error, row) => {
     if (row != undefined) {
       const hash = row.password;
-      bcrypt.compare(password, hash, function(error, isCorrect) {
+      bcrypt.compare(password, hash, function (error, isCorrect) {
         if (isCorrect) {
           req.session.sessionUser = user;
           res.render('success', {
@@ -259,12 +259,12 @@ app.post('/login', function(req, res) {
 https://www.npmjs.com/package/express-fileupload
 */
 
-app.post("/addItem", function(req, res) {
+app.post("/addItem", function (req, res) {
   const item_name = req.body["item-name"];
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
 
-  productDB.all(`SELECT * FROM products WHERE productname='${item_name}'`, function(error, rows) {
+  productDB.all(`SELECT * FROM products WHERE productname='${item_name}'`, function (error, rows) {
     if (error) {
       console.log(error.message);
       res.render("error", {
@@ -290,8 +290,47 @@ app.post("/addItem", function(req, res) {
   });
 });
 
-app.post("/restockItem", function(req, res) {
+app.post("/changeItem", function (req, res) {
   const item_name = req.body["item-name"];
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
+
+  // not yet tested
+
+  productDB.get(`SELECT id_product FROM products WHERE productname='${item_name}'`, function (error, id) {
+    if (error) {
+      console.log(error.message);
+      res.render("error", {
+        "msg": error.message
+      });
+    }
+    console.log("Product ID: " + id);
+    if (id != null) {
+      if (item_price != "") {
+        productDB.run(`UPDATE products SET price='${item_price}' WHERE id_product='${id}'`, (error) => {
+          if (error) {
+            console.log(error.message);
+            res.render("error", {
+              "msg": error.message
+            });
+          }
+        });
+      }
+      if (item_quantity != "") {
+        productDB.run(`UPDATE products SET quantity='${item_quantity}' WHERE id_product='${id}'`, (error) => {
+          if (error) {
+            console.log(error.message);
+            res.render("error", {
+              "msg": error.message
+            });
+          }
+        });
+      }
+      res.redirect("home");
+    } else {
+      res.render("error", {
+        "msg": "Product not found."
+      });
+    }
+  });
 });
