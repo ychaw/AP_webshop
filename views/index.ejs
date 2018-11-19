@@ -34,12 +34,15 @@
           <div class="left">
             <%= allItems[i].productname %><br>
             <%= allItems[i].price %>€<br>
-            <%=allItems[i].quantity %> in store<br>
+            <%= allItems[i].quantity %> in store<br>
           </div>
           <img src="test.png" alt="Your browser can't display this image!"><br>
-          <button class="add-button">Add to Cart</button>
+          <form class="" action="addToCart" method="post">
+            <button class="add-button" type="submit" name="name" value=<%=allItems[i].productname %>>Add to Cart</button>
+          </form>
         </li>
         <%}%>
+
       </ul>
     </div>
 
