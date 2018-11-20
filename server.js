@@ -24,7 +24,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   sessionUser: false,
-  cart: [],
+  cart: ["Sessiontest"],
   //for testing, set to false initially
   isAdmin: true
 }));
@@ -336,8 +336,6 @@ app.post("/changeItem", function(req, res) {
 });
 
 app.post("/addToCart", function(req, res) {
-
-  /
 
   var id = req.body["id"];
 
