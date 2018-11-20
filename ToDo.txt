@@ -1,10 +1,9 @@
 Needs implementation:
-  - (password hash)
-  - file upload
-  - (item display)
+  - new item, file upload
+  - display pictures (via id)
 
 Maybe needs implementation:
   - mail-address for users
 
 Needs fixing:
-  -
+  - cart keeps clearing

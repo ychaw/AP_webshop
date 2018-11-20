@@ -63,6 +63,8 @@ app.get("/home", function(req, res) {
   //for testing, set to false if user view is needed
   req.session.isAdmin = false;
 
+  console.log(req.session.cart);
+
   productDB.all(sql, function(error, rows) {
     if (error) {
       console.log(error.message);
@@ -99,7 +101,6 @@ app.get("/registration", function(req, res) {
 
 app.get("/checkout", function(req, res) {
   console.log(typeof req.session.cart);
-  req.session.cart = [];
   // req.session.cart.push({
   //   productname: "test",
   //   price: "0.99",
@@ -336,19 +337,21 @@ app.post("/changeItem", function(req, res) {
 
 app.post("/addToCart", function(req, res) {
 
-  //crashes, because name is not sent completly
+  /
 
-  var productname = req.body["name"];
-  console.log(productname);
-  productDB.get(`SELECT * FROM products WHERE productname ='${productname}'`, function(error, row) {
+  var id = req.body["id"];
+
+  productDB.get(`SELECT * FROM products WHERE id_product ='${id}'`, function(error, row) {
+
     if (error) {
       console.log(error.message);
       res.render("error", {
         "msg": error.message
       });
     }
-
-    req.session.cart.push(row.productname);
+    console.log(row.productname);
+    req.session.cart[0] = (row.productname);
+    console.log(req.session.cart);
   });
   res.redirect("home");
 });
