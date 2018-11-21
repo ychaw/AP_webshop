@@ -6,4 +6,4 @@ Maybe needs implementation:
   - mail-address for users
 
 Needs fixing:
-  - cart keeps clearing
+- crashes when spamming clicks on add to cart

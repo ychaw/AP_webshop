@@ -53,11 +53,20 @@
         <li class="list-entry">
           <%= cart[i].productname %><br>
           <%= cart[i].price %>€ per item<br>
-          <%= cart[i].quantity %><br>
-          <% total += cart[i].price * cart[i].quantity %><br>
+          <%= cart[i].quantity %> in cart<br>
+          <% total += cart[i].price * cart[i].quantity %>
+          <form class="" action="removeFromCart" method="post">
+            <button class="add-button" type="submit" name="index" value=<%=i %>>Remove</button>
+          </form>
         </li>
         <%}%>
-        <li class="list-entry">Total: <%= total %>€</li>
+        <li class="list-entry">Total:
+          <%= total.toFixed(2) %>€
+          <form class="" action="clearCart" method="post">
+            <button class="add-button" type="submit">Clear</button>
+          </form>
+        </li>
+
       </ul>
     </div>
   </div>

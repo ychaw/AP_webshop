@@ -28,8 +28,7 @@ app.use(session({
   saveUninitialized: true,
   sessionUser: false,
   cart: false,
-  //for testing, set to false initially
-  isAdmin: true
+  isAdmin: false
 }));
 
 
@@ -65,12 +64,9 @@ app.get("/", (request,response) =>{
 app.get("/home", function(req, res) {
   const sql = 'SELECT * FROM products';
 
-  //for testing, set to false if user view is needed
-  req.session.isAdmin = false;
   if (!req.session.cart) {
     req.session.cart = [];
   }
-  console.log(req.session.cart);
 
   productDB.all(sql, function(error, rows) {
     if (error) {
@@ -113,14 +109,14 @@ app.get("/checkout", function(req, res) {
 });
 
 app.post("/checkout", function(req, res) {
-  if(req.session.sessionUser) {
-      req.session.cart = [];
-      res.redirect("/home");
+  if (req.session.sessionUser) {
+    req.session.cart = [];
+    res.redirect("/home");
   } else {
     res.render("error", {
       "msg": "Please log in before checking out."
-    }
     });
+  }
 });
 
 app.get("/newproduct", function(req, res) {
@@ -360,20 +356,24 @@ app.post("/addToCart", function(req, res) {
       });
     }
     var found = false;
-    for(var i = 0; i < req.session.cart.length; i++) {
-      if(req.session.cart[i].productname == row.productname) {
+    for (var i = 0; i < req.session.cart.length; i++) {
+      if (req.session.cart[i].productname == row.productname) {
         req.session.cart[i].quantity++;
-        found=true;
+        found = true;
       }
     }
-    if(!found) {
-        req.session.cart.push({productname:row.productname, price:row.price, quantity:1});
+    if (!found) {
+      req.session.cart.push({
+        productname: row.productname,
+        price: row.price,
+        quantity: 1
+      });
     }
   });
 
+  //save session to avoid preemptive flush of header
   req.session.save(function(error) {
     if (error) {
-      console.log(error.message);
       res.render("error", {
         "msg": error.message
       });
@@ -381,4 +381,44 @@ app.post("/addToCart", function(req, res) {
     res.redirect("home");
   });
 
+});
+
+app.post("/removeFromCart", function(req, res) {
+  var removeProductIndex = req.body["index"];
+
+  req.session.cart[removeProductIndex].quantity--;
+  if (req.session.cart[removeProductIndex].quantity < 1) {
+    //more elegant but produces bugs
+    // req.session.cart.splice(removeProductIndex, removeProductIndex + 1);
+    if (removeProductIndex == 0) {
+      req.session.cart.shift();
+    } else if (removeProductIndex == req.session.cart.length) {
+      req.session.cart.pop();
+    } else {
+      for (var i = removeProductIndex + 1; i < req.session.cart.length; i++) {
+        req.session.cart[i - 1] = req.session.cart[i];
+      }
+    }
+  }
+  //save session to avoid preemptive flush of header
+  req.session.save(function(error) {
+    if (error) {
+      res.render("error", {
+        "msg": error.message
+      });
+    }
+    res.redirect("home");
+  });
+});
+
+app.post("/clearCart", function(req, res) {
+  req.session.cart = [];
+  req.session.save(function(error) {
+    if (error) {
+      res.render("error", {
+        "msg": error.message
+      });
+    }
+    res.redirect("home");
+  });
 });
