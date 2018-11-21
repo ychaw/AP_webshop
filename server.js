@@ -18,16 +18,21 @@ app.engine('.ejs', require('ejs').__express);
 app.set('view engine', 'ejs');
 
 // Sessionvariablen
-const session = require('express-session');
+var session = require('express-session');
+var FileStore = require('session-file-store')(session);
+
 app.use(session({
+  store: new FileStore,
   secret: 'example',
   resave: false,
   saveUninitialized: true,
   sessionUser: false,
-  cart: ["Sessiontest"],
+  cart: false,
   //for testing, set to false initially
   isAdmin: true
 }));
+
+
 
 // Passwort Verschlüsselung
 const bcrypt = require('bcrypt');
@@ -62,7 +67,9 @@ app.get("/home", function(req, res) {
 
   //for testing, set to false if user view is needed
   req.session.isAdmin = false;
-
+  if (!req.session.cart) {
+    req.session.cart = [];
+  }
   console.log(req.session.cart);
 
   productDB.all(sql, function(error, rows) {
@@ -70,20 +77,15 @@ app.get("/home", function(req, res) {
       console.log(error.message);
     } else {
 
-      //redundant, but leave until tested
-      if (!req.session.cart) {
-        req.session.cart = [];
-      }
-
       if (req.session.isAdmin) {
         res.render('indexAdmin', {
           'allItems': rows || [],
-          'cart': req.session.cart || []
+          'cart': req.session.cart
         });
       } else {
         res.render('index', {
           'allItems': rows || [],
-          'cart': req.session.cart || [],
+          'cart': req.session.cart,
           'user': req.session.sessionUser
         });
       }
@@ -107,7 +109,7 @@ app.get("/checkout", function(req, res) {
   //   quantity: "3"
   // });
   res.render("checkout", {
-    "cart": req.session.cart || []
+    "cart": req.session.cart
   });
 });
 
@@ -347,9 +349,17 @@ app.post("/addToCart", function(req, res) {
         "msg": error.message
       });
     }
-    console.log(row.productname);
-    req.session.cart[0] = (row.productname);
-    console.log(req.session.cart);
+    req.session.cart.push(row.productname);
   });
-  res.redirect("home");
+
+  req.session.save(function(error) {
+    if (error) {
+      console.log(error.message);
+      res.render("error", {
+        "msg": error.message
+      });
+    }
+    res.redirect("home");
+  });
+
 });
