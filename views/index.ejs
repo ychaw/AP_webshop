@@ -42,21 +42,22 @@
           </form>
         </li>
         <%}%>
-
       </ul>
     </div>
 
     <div class="list-wrapper" id="cart">
       <h2 class="list-heading">Cart</h2>
       <ul class="all-item-list">
+        <%var total = 0;%>
         <% for(var i = 0; i < cart.length; i++) { %>
         <li class="list-entry">
-          <%= cart[i] %><br>
           <%= cart[i].productname %><br>
-          <%= cart[i].price %><br>
+          <%= cart[i].price %>€ per item<br>
           <%= cart[i].quantity %><br>
+          <% total += cart[i].price * cart[i].quantity %><br>
         </li>
         <%}%>
+        <li class="list-entry">Total: <%= total %>€</li>
       </ul>
     </div>
   </div>

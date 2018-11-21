@@ -102,7 +102,6 @@ app.get("/registration", function(req, res) {
 });
 
 app.get("/checkout", function(req, res) {
-  console.log(typeof req.session.cart);
   // req.session.cart.push({
   //   productname: "test",
   //   price: "0.99",
@@ -111,6 +110,17 @@ app.get("/checkout", function(req, res) {
   res.render("checkout", {
     "cart": req.session.cart
   });
+});
+
+app.post("/checkout", function(req, res) {
+  if(req.session.sessionUser) {
+      req.session.cart = [];
+      res.redirect("/home");
+  } else {
+    res.render("error", {
+      "msg": "Please log in before checking out."
+    }
+    });
 });
 
 app.get("/newproduct", function(req, res) {
@@ -349,7 +359,16 @@ app.post("/addToCart", function(req, res) {
         "msg": error.message
       });
     }
-    req.session.cart.push(row.productname);
+    var found = false;
+    for(var i = 0; i < req.session.cart.length; i++) {
+      if(req.session.cart[i].productname == row.productname) {
+        req.session.cart[i].quantity++;
+        found=true;
+      }
+    }
+    if(!found) {
+        req.session.cart.push({productname:row.productname, price:row.price, quantity:1});
+    }
   });
 
   req.session.save(function(error) {
