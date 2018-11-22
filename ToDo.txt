@@ -1,6 +1,7 @@
 Needs implementation:
   - new item, file upload
   - display pictures (via id)
+  - Admin functions!
 
 Maybe needs implementation:
   - mail-address for users
