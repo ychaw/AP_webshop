@@ -10,8 +10,8 @@
 <body class="container">
   <div class="header">
     <% if(user){%>
-    <p>Logged in as
-      <%= user %>
+    <p id="login-status">Welcome
+      <%= user %>!
     </p>
     <a class="nav-button" href="/logout">Logout</a>
     <%} else {%>
@@ -33,11 +33,11 @@
         <li class=" list-entry">
           <div class="left">
             <%= allItems[i].productname %><br>
-            <%= allItems[i].price %>€<br>
+            <%= (allItems[i].price/100).toFixed(2) %>€<br>
             <%= allItems[i].quantity %> in store<br>
           </div>
           <img src="test.png" alt="Your browser can't display this image!"><br>
-          <form class="" action="addToCart" method="post">
+          <form class="add-wrapper" action="addToCart" method="post">
             <button class="add-button" type="submit" name="id" value=<%=allItems[i].id_product %>>Add to Cart</button>
           </form>
         </li>
@@ -52,7 +52,7 @@
         <% for(var i = 0; i < cart.length; i++) { %>
         <li class="list-entry">
           <%= cart[i].productname %><br>
-          <%= cart[i].price %>€ per item<br>
+          <%= (cart[i].price/100).toFixed(2) %>€ per item<br>
           <%= cart[i].quantity %> in cart<br>
           <% total += cart[i].price * cart[i].quantity %>
           <form class="" action="removeFromCart" method="post">
@@ -61,13 +61,15 @@
         </li>
         <%}%>
         <li class="list-entry">Total:
-          <%= total.toFixed(2) %>€
-          <form class="" action="clearCart" method="post">
-            <button class="add-button" type="submit">Clear</button>
-          </form>
+          <%= (total/100).toFixed(2) %>€
         </li>
 
+
       </ul>
+
+      <form class="" action="clearCart" method="post">
+        <button class="add-button" id="clear-button" type="submit">Clear</button>
+      </form>
     </div>
   </div>
 

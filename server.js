@@ -57,7 +57,7 @@ app.get("/", function(req, res) {
 /*
 app.get("/", (request,response) =>{
    userDB.run('CREATE TABLE user (id_user INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL)');
-   productDB.run('CREATE TABLE products (id_product INTEGER PRIMARY KEY AUTOINCREMENT, productname TEXT NOT NULL, price TEXT NOT NULL, quantity TEXT NOT NULL)');
+   productDB.run('CREATE TABLE products (id_product INTEGER PRIMARY KEY AUTOINCREMENT, productname TEXT NOT NULL, price INTEGER NOT NULL, quantity INTEGER NOT NULL)');
 });
 */
 
@@ -106,17 +106,6 @@ app.get("/checkout", function(req, res) {
   res.render("checkout", {
     "cart": req.session.cart
   });
-});
-
-app.post("/checkout", function(req, res) {
-  if (req.session.sessionUser) {
-    req.session.cart = [];
-    res.redirect("/home");
-  } else {
-    res.render("error", {
-      "msg": "Please log in before checking out."
-    });
-  }
 });
 
 app.get("/newproduct", function(req, res) {
@@ -381,6 +370,54 @@ app.post("/addToCart", function(req, res) {
     res.redirect("home");
   });
 
+});
+
+app.post("/checkout", function(req, res) {
+  if (req.session.sessionUser) {
+    var query = `SELECT * FROM products`;
+
+    productDB.all(query, function(error, rows) {
+      if (error) {
+        console.log(error.message);
+        res.render("error", {
+          "msg": error.message
+        });
+      } else {
+
+        //this is quite inefficient, but async issues forced my hand
+        //keep the database small!
+
+        rows.forEach(function(row) {
+          req.session.cart.forEach(function(item) {
+            if (row.productname == item.productname) {
+              var currentProductName = item.productname;
+              var currentProductQuantity = item.quantity;
+              var quantityAfterPurchase = row.quantity - currentProductQuantity;
+
+              productDB.run(`UPDATE products SET quantity='${quantityAfterPurchase}' WHERE productname='${currentProductName}'`);
+            }
+          });
+        });
+      }
+      req.session.cart = [];
+      req.session.save(function(error) {
+        if (error) {
+          res.render("error", {
+            "msg": error.message
+          });
+        }
+        res.redirect("home");
+      });
+
+    });
+
+
+
+  } else {
+    res.render("error", {
+      "msg": "Please log in before checking out."
+    });
+  }
 });
 
 app.post("/removeFromCart", function(req, res) {

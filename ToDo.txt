@@ -2,6 +2,10 @@ Needs implementation:
   - new item, file upload
   - display pictures (via id)
   - Admin functions!
+  - disable add to cart button, if no items in stock
+  - styling on Error
+  - styling on checkout
+  - search bar
 
 Maybe needs implementation:
   - mail-address for users
