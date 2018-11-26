@@ -5,37 +5,6 @@
   align-items: center;
 }
 
-.list-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 15px;
-  padding: 20px;
-  border-radius: 15px;
-  background-color: #F3BF04;
-}
-
-.all-item-list {
-  display: flex;
-  flex-direction: column;
-  list-style-type: none;
-}
-
-.list-heading {
-  align-items: center;
-  font-size: 2rem;
-}
-
-.list-entry {
-  display: flex;
-  flex-direction: row;
-  background-color: #FDDA5E;
-  border-radius: 15px;
-  font-size: 1.3rem;
-  margin: 5px;
-  padding: 5px;
-}
-
 .list-entry .left {
   flex: 3;
   padding: 10px;

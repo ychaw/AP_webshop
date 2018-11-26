@@ -1,3 +1,9 @@
 .nav-button {
   margin: 10px;
 }
+
+.list-entry {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}

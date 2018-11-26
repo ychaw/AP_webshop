@@ -22,7 +22,7 @@
       <li class="list-entry">
         <%= cart[i].productname %><br>
         <%= (cart[i].price/100).toFixed(2)%>€<br>
-        <%= cart[i].quantity %><br>
+        <%= cart[i].quantity %>x<br>
         <% total += cart[i].price * cart[i].quantity; %>
       </li>
       <%}%>
