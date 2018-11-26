@@ -31,17 +31,20 @@ app.use(session({
   isAdmin: false
 }));
 
-
-
 // Passwort Verschlüsselung
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+
+//File Upload
+const fileUpload = require('express-fileupload');
+
 
 //Include CSS and JS directories
 app.use(express.static(__dirname + "/stylings"));
 app.use(express.static(__dirname + "/js"));
 
 app.use(express.static(__dirname + "/img"));
+app.use(fileUpload());
 
 // Webserver starten http://localhost:3000
 app.listen(3000, function() {
@@ -66,6 +69,12 @@ app.get("/home", function(req, res) {
 
   if (!req.session.cart) {
     req.session.cart = [];
+  }
+
+  if (req.session.sessionUser == "admin") {
+    req.session.isAdmin = true;
+  } else {
+    req.session.isAdmin = false;
   }
 
   productDB.all(sql, function(error, rows) {
@@ -235,6 +244,9 @@ app.post('/login', function(req, res) {
       bcrypt.compare(password, hash, function(error, isCorrect) {
         if (isCorrect) {
           req.session.sessionUser = user;
+          if (req.session.sessionUser == "admin") {
+            req.session.isAdmin = true;
+          }
           res.render('success', {
             'user': user
           });
@@ -252,14 +264,11 @@ app.post('/login', function(req, res) {
   });
 });
 
-/*Add item
-https://www.npmjs.com/package/express-fileupload
-*/
-
 app.post("/addItem", function(req, res) {
   const item_name = req.body["item-name"];
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
+  var item_picture = req.files.itemPicture;
 
   productDB.all(`SELECT * FROM products WHERE productname='${item_name}'`, function(error, rows) {
     if (error) {
@@ -280,7 +289,18 @@ app.post("/addItem", function(req, res) {
             "msg": error.message
           });
         } else {
+          item_picture.name = item_name + ".png";
+          item_picture.mv('./img/' + item_picture.name, function(error) {
+            if (error) {
+              console.log(error.message);
+              res.render("error", {
+                "msg": error.message
+              });
+            }
+          });
+
           res.redirect("home");
+
         }
       });
     }
@@ -291,7 +311,7 @@ app.post("/changeItem", function(req, res) {
   const item_name = req.body["item-name"];
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
-
+  console.log("\nRunning");
   // not yet tested
 
   productDB.get(`SELECT id_product FROM products WHERE productname='${item_name}'`, function(error, id) {
@@ -301,10 +321,10 @@ app.post("/changeItem", function(req, res) {
         "msg": error.message
       });
     }
-    console.log("Product ID: " + id);
+    console.log("Product ID: " + id.id_product);
     if (id != null) {
       if (item_price != "") {
-        productDB.run(`UPDATE products SET price='${item_price}' WHERE id_product='${id}'`, (error) => {
+        productDB.run(`UPDATE products SET price='${item_price}' WHERE id_product='${id.id_product}'`, (error) => {
           if (error) {
             console.log(error.message);
             res.render("error", {
@@ -314,7 +334,7 @@ app.post("/changeItem", function(req, res) {
         });
       }
       if (item_quantity != "") {
-        productDB.run(`UPDATE products SET quantity='${item_quantity}' WHERE id_product='${id}'`, (error) => {
+        productDB.run(`UPDATE products SET quantity='${item_quantity}' WHERE id_product='${id.id_product}'`, (error) => {
           if (error) {
             console.log(error.message);
             res.render("error", {
