@@ -1,5 +1,4 @@
 Needs implementation:
-  - disable add to cart button, if no items in stock
   - styling on Error
   - styling on checkout
   - search bar

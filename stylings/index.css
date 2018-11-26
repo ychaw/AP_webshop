@@ -72,6 +72,10 @@
   cursor: pointer;
 }
 
+.add-button:disabled {
+  background-color: #888;
+}
+
 .dropdown {
   position: relative;
   display: inline-block;

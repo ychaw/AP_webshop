@@ -38,7 +38,12 @@
           </div>
           <img src=<%=allItems[i].productname + ".png" %> alt="Your browser can't display this image!"><br>
           <form class="add-wrapper" action="addToCart" method="post">
+            <% var canBeAdded = (allItems[i].quantity > 1);%>
+            <% if(canBeAdded){%>
             <button class="add-button" type="submit" name="id" value=<%=allItems[i].id_product %>>Add to Cart</button>
+            <%} else {%>
+            <button class="add-button" type="submit" name="id" value=<%=allItems[i].id_product %> disabled >Add to Cart</button>
+            <%}%>
           </form>
         </li>
         <%}%>

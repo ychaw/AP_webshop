@@ -65,6 +65,7 @@ app.get("/", (request,response) =>{
 */
 
 app.get("/home", function(req, res) {
+
   const sql = 'SELECT * FROM products';
 
   if (!req.session.cart) {
