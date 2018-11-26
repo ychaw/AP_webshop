@@ -31,10 +31,17 @@
       <%} else {%>
       <p>Your cart is empty.</p>
       <%}%>
+
+      <form class="user-box" action="checkout" method="post">
+        <input type="text" name="name" placeholder="Name">
+        <input type="text" name="country" placeholder="Country">
+        <input type="text" name="city" placeholder="City">
+        <input type="text" name="street" placeholder="Street">
+        <input type="text" name="info" placeholder="Additional info">
+        <button class="nav-button" type="submit" name="button">Checkout</button>
+      </form>
     </ul>
-    <form class="" action="checkout" method="post">
-      <button class="nav-button" type="submit" name="button">Checkout</button>
-    </form>
+
   </div>
 </body>
 

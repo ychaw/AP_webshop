@@ -1,8 +1,9 @@
 Needs implementation:
-  - search bar
+  -
 
 Maybe needs implementation:
-  - mail-address for users
+  - scaling?
+
 
 Needs fixing:
-- crashes when spamming clicks on add to cart
+- crashes when spamming clicks on add and remove to cart
