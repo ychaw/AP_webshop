@@ -1,6 +1,4 @@
 Needs implementation:
-  - styling on Error
-  - styling on checkout
   - search bar
 
 Maybe needs implementation:

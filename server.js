@@ -480,3 +480,33 @@ app.post("/clearCart", function(req, res) {
     res.redirect("home");
   });
 });
+
+app.post("/searchItem", function(req, res) {
+
+  if (req.body["articelName"] == "") {
+    res.redirect("/home")
+  }
+
+  const sql = 'SELECT * FROM products WHERE productname="' + req.body["articelName"] + "\"";
+
+  productDB.all(sql, function(error, rows) {
+    if (error) {
+      console.log(error.message);
+    } else {
+
+      if (req.session.isAdmin) {
+        res.render('indexAdmin', {
+          'allItems': rows || [],
+          'cart': req.session.cart
+        });
+      } else {
+        res.render('index', {
+          'allItems': rows || [],
+          'cart': req.session.cart,
+          'user': req.session.sessionUser
+        });
+      }
+    }
+  });
+
+});
