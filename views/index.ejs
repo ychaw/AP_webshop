@@ -38,7 +38,13 @@
           </div>
           <img src='<%=allItems[i].productname + ".png" %>' alt="Your browser can't display this image!"><br>
           <form class="add-wrapper" action="addToCart" method="post">
-            <% var canBeAdded = (allItems[i].quantity > 1);%>
+            <% var notOverStorage = true;%>
+            <% for(var j = 0; j < cart.length; j++) { %>
+            <% if(cart[j].productname == allItems[i].productname) {%>
+            <% notOverStorage = (cart[j].quantity < allItems[i].quantity);%>
+            <%}%>
+            <%}%>
+            <% var canBeAdded = (allItems[i].quantity > 1) && notOverStorage %>
             <% if(canBeAdded){%>
             <button class="add-button" type="submit" name="id" value=<%=allItems[i].id_product %>>Add to Cart</button>
             <%} else {%>
