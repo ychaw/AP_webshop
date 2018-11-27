@@ -36,7 +36,7 @@
             <%= (allItems[i].price/100).toFixed(2) %>€<br>
             <%= allItems[i].quantity %> in store<br>
           </div>
-          <img src=<%=allItems[i].productname + ".png" %> alt="Your browser can't display this image!"><br>
+          <img src='<%=allItems[i].productname + ".png" %>' alt="Your browser can't display this image!"><br>
           <form class="add-wrapper" action="addToCart" method="post">
             <% var canBeAdded = (allItems[i].quantity > 1);%>
             <% if(canBeAdded){%>

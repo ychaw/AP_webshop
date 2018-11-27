@@ -70,6 +70,16 @@ app.get("/home", function(req, res) {
 
   if (!req.session.cart) {
     req.session.cart = [];
+  } else {
+    //check if cart contains negative quantities
+    req.session.cart.forEach(function(item) {
+      if (item.quantity < 1) {
+        var index = req.session.cart.indexOf(item);
+        if (index > -1) {
+          req.session.cart.splice(index, 1);
+        }
+      }
+    });
   }
 
   if (req.session.sessionUser == "admin") {
@@ -77,6 +87,9 @@ app.get("/home", function(req, res) {
   } else {
     req.session.isAdmin = false;
   }
+
+
+
 
   productDB.all(sql, function(error, rows) {
     if (error) {
@@ -132,6 +145,36 @@ app.get("/logout", function(req, res) {
   res.render("logout");
 });
 
+/*Login*/
+
+app.post('/login', function(req, res) {
+  const user = req.body["name"];
+  const password = req.body["pw"];
+  userDB.get(`SELECT * FROM user WHERE username='${user}'`, (error, row) => {
+    if (row != undefined) {
+      const hash = row.password;
+      bcrypt.compare(password, hash, function(error, isCorrect) {
+        if (isCorrect) {
+          req.session.sessionUser = user;
+          if (req.session.sessionUser == "admin") {
+            req.session.isAdmin = true;
+          }
+          res.render('success', {
+            'user': user
+          });
+        } else {
+          res.render('error', {
+            "msg": "Wrong password"
+          });
+        }
+      });
+    } else {
+      res.render('error', {
+        "msg": "Name or password not found"
+      });
+    }
+  });
+});
 
 /*Register user*/
 
@@ -234,37 +277,6 @@ app.post('/delete', (req, res) => {
 
 });
 
-/*Login*/
-
-app.post('/login', function(req, res) {
-  const user = req.body["name"];
-  const password = req.body["pw"];
-  userDB.get(`SELECT * FROM user WHERE username='${user}'`, (error, row) => {
-    if (row != undefined) {
-      const hash = row.password;
-      bcrypt.compare(password, hash, function(error, isCorrect) {
-        if (isCorrect) {
-          req.session.sessionUser = user;
-          if (req.session.sessionUser == "admin") {
-            req.session.isAdmin = true;
-          }
-          res.render('success', {
-            'user': user
-          });
-        } else {
-          res.render('error', {
-            "msg": "Wrong password"
-          });
-        }
-      });
-    } else {
-      res.render('error', {
-        "msg": "Name or password not found"
-      });
-    }
-  });
-});
-
 app.post("/addItem", function(req, res) {
   const item_name = req.body["item-name"];
   const item_price = req.body["item-price"];
@@ -312,8 +324,6 @@ app.post("/changeItem", function(req, res) {
   const item_name = req.body["item-name"];
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
-  console.log("\nRunning");
-  // not yet tested
 
   productDB.get(`SELECT id_product FROM products WHERE productname='${item_name}'`, function(error, id) {
     if (error) {
@@ -322,7 +332,7 @@ app.post("/changeItem", function(req, res) {
         "msg": error.message
       });
     }
-    console.log("Product ID: " + id.id_product);
+
     if (id != null) {
       if (item_price != "") {
         productDB.run(`UPDATE products SET price='${item_price}' WHERE id_product='${id.id_product}'`, (error) => {
@@ -443,30 +453,34 @@ app.post("/checkout", function(req, res) {
 
 app.post("/removeFromCart", function(req, res) {
   var removeProductIndex = req.body["index"];
-
-  req.session.cart[removeProductIndex].quantity--;
-  if (req.session.cart[removeProductIndex].quantity < 1) {
-    //more elegant but produces bugs
-    // req.session.cart.splice(removeProductIndex, removeProductIndex + 1);
-    if (removeProductIndex == 0) {
-      req.session.cart.shift();
-    } else if (removeProductIndex == req.session.cart.length) {
-      req.session.cart.pop();
-    } else {
-      for (var i = removeProductIndex + 1; i < req.session.cart.length; i++) {
-        req.session.cart[i - 1] = req.session.cart[i];
+  try {
+    req.session.cart[removeProductIndex].quantity--;
+    if (req.session.cart[removeProductIndex].quantity < 1) {
+      //more elegant but produces bugs
+      // req.session.cart.splice(removeProductIndex, removeProductIndex + 1);
+      if (removeProductIndex == 0) {
+        req.session.cart.shift();
+      } else if (removeProductIndex == req.session.cart.length) {
+        req.session.cart.pop();
+      } else {
+        for (var i = removeProductIndex + 1; i < req.session.cart.length; i++) {
+          req.session.cart[i - 1] = req.session.cart[i];
+        }
       }
     }
+  } catch (error) {
+    console.log(error.message);
+  } finally {
+    //save session to avoid preemptive flush of header
+    req.session.save(function(error) {
+      if (error) {
+        res.render("error", {
+          "msg": error.message
+        });
+      }
+      res.redirect("home");
+    });
   }
-  //save session to avoid preemptive flush of header
-  req.session.save(function(error) {
-    if (error) {
-      res.render("error", {
-        "msg": error.message
-      });
-    }
-    res.redirect("home");
-  });
 });
 
 app.post("/clearCart", function(req, res) {
@@ -484,7 +498,7 @@ app.post("/clearCart", function(req, res) {
 app.post("/searchItem", function(req, res) {
 
   if (req.body["articelName"] == "") {
-    res.redirect("/home")
+    res.redirect("/home");
   }
 
   const sql = 'SELECT * FROM products WHERE productname="' + req.body["articelName"] + "\"";
@@ -508,5 +522,15 @@ app.post("/searchItem", function(req, res) {
       }
     }
   });
+});
 
+app.post("/deleteItem", function(req, res) {
+  const sql = 'DELETE FROM products WHERE productname="' + req.body["deleteProduct"] + "\"";
+
+  productDB.run(sql, function(error, rows) {
+    if (error) {
+      console.log(error.message);
+    }
+    res.redirect("/home");
+  });
 });

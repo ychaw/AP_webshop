@@ -129,3 +129,12 @@
   padding: 5px 20px;
   margin: auto;
 }
+
+#admin-info {
+  width: 400px;
+  text-align: center;
+}
+
+#delete-button {
+  margin-top: 30px;
+}

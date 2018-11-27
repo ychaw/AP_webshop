@@ -27,7 +27,10 @@
             <%= (allItems[i].price/100).toFixed(2) %>€<br>
             <%=allItems[i].quantity %> in store<br>
           </div>
-          <img src=<%=allItems[i].productname + ".png" %> alt="Your browser can't display this image!"><br>
+          <img src='<%=allItems[i].productname + ".png" %>' alt="Your browser can't display this image!"><br>
+          <form class="" action="/deleteItem" method="post">
+            <button class="nav-button" id="delete-button" type="submit" name="deleteProduct" value='<%=allItems[i].productname%>'>Delete</button>
+          </form>
         </li>
         <%}%>
       </ul>
@@ -36,22 +39,19 @@
     <div class="list-wrapper">
       <h2 class="list-heading">Add item</h2>
       <form class="all-item-list" action="addItem" method="post" encType="multipart/form-data">
-        <input class="search-bar-input" type="text" name="item-name" placeholder="Item name">
-        <input class="search-bar-input" type="text" name="item-price" placeholder="Price in ct">
-        <input class="search-bar-input" type="text" name="item-quantity" placeholder="Quantity">
+        <input class="search-bar-input" type="text" name="item-name" placeholder="Item name" required>
+        <input class="search-bar-input" type="text" name="item-price" placeholder="Price in ct" required>
+        <input class="search-bar-input" type="text" name="item-quantity" placeholder="Quantity" required>
         <label for="file-upload" class="nav-button">
           <div class="container">
             Select picture
           </div>
         </label>
-        <input id="file-upload" type="file" name="itemPicture">
+        <input id="file-upload" type="file" name="itemPicture" required>
         <button class="nav-button" type="submit" name="Upload">Upload</button>
       </form>
-    </div>
-
-    <div class="list-wrapper">
       <h2 class="list-heading">Update item</h2>
-      <p>Use item name to select the item.<br>
+      <p id="admin-info">Use item name to select the item.<br>
         You can leave price or new quantity empty if you do not wish to change said property.
       </p>
       <form class="all-item-list" action="changeItem" method="post">
