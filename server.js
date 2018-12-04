@@ -44,6 +44,7 @@ app.use(express.static(__dirname + "/stylings"));
 app.use(express.static(__dirname + "/js"));
 
 app.use(express.static(__dirname + "/img"));
+app.use(express.static(__dirname + "/icons"));
 app.use(fileUpload());
 
 // Webserver starten http://localhost:3000

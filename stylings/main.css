@@ -1,7 +1,7 @@
 html {
   font-size: 100%;
   font-family: "Helvetica", "Open Sans", sans-serif;
-  background-color: #FDDA5E;
+  background-color: #FFDA5E;
 }
 
 a {
@@ -22,7 +22,8 @@ a {
   flex-direction: row;
   align-content: center;
   justify-content: center;
-  min-width: 100% overflow:auto;
+  min-width: 100%;
+  overflow: hidden;
   margin: 0;
   padding: 5px;
   background-color: #F3BF04;
