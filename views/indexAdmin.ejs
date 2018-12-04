@@ -9,12 +9,17 @@
 
 <body class="container">
   <div class="header">
-    <a class="nav-button" href="/Logout">Logout</a>
 
-    <form action="/searchItem" method="post">
-      <input class="search-bar-input" type="text" id="articelName" name="articelName" placeholder="Search..."> <br>
-    </form>
-
+    <div class="icon">
+      <img src="bumblebuyIcon.svg" width="70" height="70" alt="Your browser can't display this image!" href="/home">
+    </div>
+    <h1 id="pagename">Bumblebuy</h1>
+    <div class="header-content">
+      <a class="nav-button" href="/Logout">Logout</a>
+      <form action="/searchItem" method="post">
+        <input class="search-bar-input" type="text" id="articelName" name="articelName" placeholder="Search..."> <br>
+      </form>
+    </div>
   </div>
   <div class="middle-box">
     <div class="list-wrapper" id="all-items">

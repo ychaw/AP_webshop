@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Delete account</title>
-    <link rel="stylesheet" type="text/css" href="main.css">
-    <link rel="stylesheet" type="text/css" href="registration.css">
-  </head>
-  <body class="container">
-    <div class="header">
+
+<head>
+  <title>Delete account</title>
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <link rel="stylesheet" type="text/css" href="registration.css">
+</head>
+
+<body class="container">
+  <div class="header">
+    <div class="icon">
+      <img src="bumblebuyIcon.svg" width="70" height="70" alt="Your browser can't display this image!" href="/home">
+    </div>
+    <h1 id="pagename">Bumblebuy</h1>
+    <div class="header-content">
       <a class="nav-button" href="/home">Home</a>
     </div>
+  </div>
 
-    <div class="user-box gen-wrapper">
-      <form action="/delete" method="POST">
-        <h1>Sorry to see you leave.</h1>
-        <p>In order to delete your account please enter your password.</p>
-        <input type="password" name="pw" placeholder="Password"><br>
-        <button class="nav-button" type="submit">Delete account</button>
-      </form>
-    </div>
-  </body>
+  <div class="user-box gen-wrapper">
+    <form action="/delete" method="POST">
+      <h1>Sorry to see you leave.</h1>
+      <p>In order to delete your account please enter your password.</p>
+      <input type="password" name="pw" placeholder="Password"><br>
+      <button class="nav-button" type="submit">Delete account</button>
+    </form>
+  </div>
+</body>
+
 </html>

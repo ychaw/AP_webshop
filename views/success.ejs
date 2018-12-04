@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Success</title>
-        <link rel="stylesheet" type="text/css" href="main.css">
-        <link rel="stylesheet" type="text/css" href="success.css">
-    </head>
-    <body class="container">
-      <div class="header">
-        <a class="nav-button" href="/home">Home</a>
-      </div>
 
-      <div class="content-box gen-wrapper">
-        <h1>Welcome <%= user%>!</h1>
-        <a class="nav-button" href="\logout">Log out</a>
-        <a class="nav-button" type="submit" href="/delete">Delete account</a>
-      </div>
-    </body>
+<head>
+  <title>Success</title>
+  <link rel="stylesheet" type="text/css" href="main.css">
+  <link rel="stylesheet" type="text/css" href="success.css">
+</head>
+
+<body class="container">
+  <div class="header">
+    <div class="icon">
+      <img src="bumblebuyIcon.svg" width="70" height="70" alt="Your browser can't display this image!" href="/home">
+    </div>
+    <h1 id="pagename">Bumblebuy</h1>
+    <div class="header-content">
+      <a class="nav-button" href="/home">Home</a>
+    </div>
+  </div>
+
+  <div class="content-box gen-wrapper">
+    <h1>Welcome
+      <%= user%>!</h1>
+    <a class="nav-button" href="\logout">Log out</a>
+    <a class="nav-button" type="submit" href="/delete">Delete account</a>
+  </div>
+</body>
+
 </html>

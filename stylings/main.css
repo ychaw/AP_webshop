@@ -20,14 +20,34 @@ a {
 .header {
   display: flex;
   flex-direction: row;
-  align-content: center;
-  justify-content: center;
-  min-width: 100%;
+  min-width: 95%;
   overflow: hidden;
   margin: 0;
   padding: 5px;
   background-color: #F3BF04;
+}
+
+.icon {
+  align-content: left;
+  justify-content: left;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  min-width: 70%;
+  overflow: hidden;
+  margin: 0;
+  padding: 5px;
   margin-bottom: 5px;
+}
+
+#pagename {
+  margin: 0px 5px;
+  margin-top: 15px;
+  font-size: 40px;
 }
 
 .nav-button {
