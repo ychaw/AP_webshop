@@ -1,7 +1,7 @@
 html {
   font-size: 100%;
   font-family: "Helvetica", "Open Sans", sans-serif;
-  background-color: #FDDA5E;
+  background-color: #1a1a00;
 }
 
 a {
@@ -48,6 +48,7 @@ a {
 
 .content-box {
   margin: auto;
+  background-color: #F3BF04;
 }
 
 .user-box {
@@ -56,6 +57,7 @@ a {
   align-content: center;
   justify-content: center;
   margin-top: 15px;
+  background-color: #F3BF04;
 }
 
 .user-box input {
@@ -76,6 +78,16 @@ a {
 }
 
 .list-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 15px;
+  padding: 20px;
+  border-radius: 15px;
+  background-color: #F3BF04;
+}
+
+.gen-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
