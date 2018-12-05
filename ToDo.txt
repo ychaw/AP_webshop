@@ -6,4 +6,4 @@ Maybe needs implementation:
 
 
 Needs fixing:
-- crashes when spamming clicks on add and remove to cart
+- spam clicking?

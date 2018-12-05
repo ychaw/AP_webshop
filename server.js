@@ -190,56 +190,54 @@ app.post('/registration', (req, res) => {
     res.render("error", {
       "msg": "Passwords are not the same."
     });
-  }
-  if (newUser == '') {
+  } else if (newUser == '') {
     res.render("error", {
       "msg": "Username is empty."
     });
-  }
-  if (newPswd1 == '') {
+  } else if (newPswd1 == '') {
     res.render("error", {
       "msg": "First Password is empty."
     });
-  }
-  if (newPswd2 == '') {
+  } else if (newPswd2 == '') {
     res.render("error", {
       "msg": "Second Password is empty."
     });
-  }
-
-  userDB.get(`SELECT * FROM user WHERE username='${newUser}'`, (error, row) => {
-    if (error) {
-      console.log(error.message);
-    }
-    // error
-    if (row != undefined) {
-      res.render("error", {
-        "msg": "Username is already taken."
-      });
-    } else {
-      bcrypt.hash(newPswd1, saltRounds, function(error, hash) {
-        console.log(hashedPswd);
+  } else {
+      userDB.get(`SELECT * FROM user WHERE username='${newUser}'`, (error, row) => {
         if (error) {
           console.log(error.message);
+        }
+        // error
+        if (row != undefined) {
           res.render("error", {
-            "msg": error.message
+            "msg": "Username is already taken."
+          });
+        } else {
+          bcrypt.hash(newPswd1, saltRounds, function(error, hash) {
+            console.log(hashedPswd);
+            if (error) {
+              console.log(error.message);
+              res.render("error", {
+                "msg": error.message
+              });
+            }
+            hashedPswd = hash;
+            console.log(hashedPswd);
+            userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${hashedPswd}')`, (error) => {
+              if (error) {
+                console.log(error.message);
+                res.render("error", {
+                  "msg": error.message
+                });
+              }
+            });
+            //show successfull registration prompt or something similar. Then redirect to login
+            res.redirect('/login');
           });
         }
-        hashedPswd = hash;
-        console.log(hashedPswd);
-        userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${hashedPswd}')`, (error) => {
-          if (error) {
-            console.log(error.message);
-            res.render("error", {
-              "msg": error.message
-            });
-          }
-        });
-        //show successfull registration prompt or something similar. Then redirect to login
-        res.redirect('/login');
       });
-    }
-  });
+  }
+
 });
 
 /*Delete user*/
