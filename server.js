@@ -190,35 +190,35 @@ app.post('/registration', (req, res) => {
       "msg": "Second Password is empty."
     });
   } else {
-      userDB.get(`SELECT * FROM user WHERE username='${newUser}'`, (error, row) => {
-        if (error) {
-          res.render("error", {
-            "msg": error.message
-          });
-        }
-        if (row != undefined) {
-          res.render("error", {
-            "msg": "Username is already taken."
-          });
-        } else {
-          bcrypt.hash(newPswd1, saltRounds, function(error, hash) {
+    userDB.get(`SELECT * FROM user WHERE username='${newUser}'`, (error, row) => {
+      if (error) {
+        res.render("error", {
+          "msg": error.message
+        });
+      }
+      if (row != undefined) {
+        res.render("error", {
+          "msg": "Username is already taken."
+        });
+      } else {
+        bcrypt.hash(newPswd1, saltRounds, function(error, hash) {
+          if (error) {
+            res.render("error", {
+              "msg": error.message
+            });
+          }
+          hashedPswd = hash;
+          userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${hashedPswd}')`, (error) => {
             if (error) {
               res.render("error", {
                 "msg": error.message
               });
             }
-            hashedPswd = hash;
-            userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${hashedPswd}')`, (error) => {
-              if (error) {
-                res.render("error", {
-                  "msg": error.message
-                });
-              }
-            });
-            res.redirect('/login');
           });
-        }
-      });
+          res.redirect('/login');
+        });
+      }
+    });
   }
 });
 
@@ -261,7 +261,7 @@ app.post("/addItem", function(req, res) {
   const item_quantity = req.body["item-quantity"];
   var item_picture = req.files.itemPicture;
 
-  if(!isNaN(item_price) || !isNaN(item_quantity)) {
+  if (isNaN(item_price) || isNaN(item_quantity)) {
     res.render("error", {
       "msg": "Enter numbers!."
     });
@@ -306,7 +306,7 @@ app.post("/changeItem", function(req, res) {
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
 
-  if(!isNaN(item_price) || !isNaN(item_quantity)) {
+  if (isNaN(item_price) || isNaN(item_quantity)) {
     res.render("error", {
       "msg": "Enter numbers!."
     });
