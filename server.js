@@ -1,4 +1,4 @@
-// Datenbank initialisieren
+// Init database
 const sqlite3 = require('sqlite3').verbose();
 let userDB = new sqlite3.Database('user.db');
 let productDB = new sqlite3.Database('product.db');
@@ -7,7 +7,7 @@ let productDB = new sqlite3.Database('product.db');
 const express = require('express');
 const app = express()
 
-// Body-Parser: wertet POST-Formulare aus
+// Body-Parser
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({
   extended: true
@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({
 app.engine('.ejs', require('ejs').__express);
 app.set('view engine', 'ejs');
 
-// Sessionvariablen
+// sessionvariable
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 
@@ -31,30 +31,22 @@ app.use(session({
   isAdmin: false
 }));
 
-// Passwort Verschlüsselung
+// password hash
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-//File Upload
+//file upload
 const fileUpload = require('express-fileupload');
 
-
-//Include CSS and JS directories
+//Include CSS, images and icon directories
 app.use(express.static(__dirname + "/stylings"));
-app.use(express.static(__dirname + "/js"));
-
 app.use(express.static(__dirname + "/img"));
 app.use(express.static(__dirname + "/icons"));
 app.use(fileUpload());
 
-// Webserver starten http://localhost:3000
+// start server http://localhost:3000
 app.listen(3000, function() {
   console.log("listening on 3000");
-});
-
-// Websites
-app.get("/", function(req, res) {
-  res.redirect("home");
 });
 
 //DB erstellen, später auskommentieren
@@ -64,6 +56,11 @@ app.get("/", (request,response) =>{
    productDB.run('CREATE TABLE products (id_product INTEGER PRIMARY KEY AUTOINCREMENT, productname TEXT NOT NULL, price INTEGER NOT NULL, quantity INTEGER NOT NULL)');
 });
 */
+
+// Websites
+app.get("/", function(req, res) {
+  res.redirect("home");
+});
 
 app.get("/home", function(req, res) {
 
@@ -89,14 +86,12 @@ app.get("/home", function(req, res) {
     req.session.isAdmin = false;
   }
 
-
-
-
   productDB.all(sql, function(error, rows) {
     if (error) {
-      console.log(error.message);
+      res.render('error', {
+        "msg": "Something went wrong."
+      });
     } else {
-
       if (req.session.isAdmin) {
         res.render('indexAdmin', {
           'allItems': rows || [],
@@ -122,20 +117,12 @@ app.get("/registration", function(req, res) {
 });
 
 app.get("/checkout", function(req, res) {
-  // req.session.cart.push({
-  //   productname: "test",
-  //   price: "0.99",
-  //   quantity: "3"
-  // });
   res.render("checkout", {
     "cart": req.session.cart
   });
 });
 
-app.get("/newproduct", function(req, res) {
-  res.render("newproduct");
-});
-
+//account deletion
 app.get("/delete", function(req, res) {
   res.render("delete");
 });
@@ -185,7 +172,7 @@ app.post('/registration', (req, res) => {
   const newPswd2 = req.body["pw2"];
   var hashedPswd = false;
 
-  // error
+  //validate input
   if (newPswd1 != newPswd2) {
     res.render("error", {
       "msg": "Passwords are not the same."
@@ -205,39 +192,34 @@ app.post('/registration', (req, res) => {
   } else {
       userDB.get(`SELECT * FROM user WHERE username='${newUser}'`, (error, row) => {
         if (error) {
-          console.log(error.message);
+          res.render("error", {
+            "msg": error.message
+          });
         }
-        // error
         if (row != undefined) {
           res.render("error", {
             "msg": "Username is already taken."
           });
         } else {
           bcrypt.hash(newPswd1, saltRounds, function(error, hash) {
-            console.log(hashedPswd);
             if (error) {
-              console.log(error.message);
               res.render("error", {
                 "msg": error.message
               });
             }
             hashedPswd = hash;
-            console.log(hashedPswd);
             userDB.run(`INSERT INTO user (username, password) VALUES ('${newUser}', '${hashedPswd}')`, (error) => {
               if (error) {
-                console.log(error.message);
                 res.render("error", {
                   "msg": error.message
                 });
               }
             });
-            //show successfull registration prompt or something similar. Then redirect to login
             res.redirect('/login');
           });
         }
       });
   }
-
 });
 
 /*Delete user*/
@@ -252,9 +234,7 @@ app.post('/delete', (req, res) => {
       bcrypt.compare(password, hash, function(error, isCorrect) {
         if (isCorrect) {
           req.session.sessionUser = false;
-          console.log("Delete now", user, password);
           userDB.run(`DELETE FROM user WHERE username='${user}'`, (error) => {
-            console.log("Callback from delete request");
             if (error) {
               console.log(error.message);
             }
@@ -268,10 +248,9 @@ app.post('/delete', (req, res) => {
       });
     } else {
       res.render('error'), {
-        "msg": "Row is undefined"
+        "msg": "Something went wrong."
       };
     }
-    console.log(req.session.sessionUser);
   });
 
 });
@@ -282,41 +261,44 @@ app.post("/addItem", function(req, res) {
   const item_quantity = req.body["item-quantity"];
   var item_picture = req.files.itemPicture;
 
-  productDB.all(`SELECT * FROM products WHERE productname='${item_name}'`, function(error, rows) {
-    if (error) {
-      console.log(error.message);
-      res.render("error", {
-        "msg": error.message
-      });
-    }
-    if (rows.length != 0) {
-      res.render("error", {
-        "msg": "Product already exists."
-      });
-    } else {
-      productDB.run(`INSERT INTO products (productname, price, quantity) VALUES ('${item_name}', '${item_price}', ${item_quantity})`, (error) => {
-        if (error) {
-          console.log(error.message);
-          res.render("error", {
-            "msg": error.message
-          });
-        } else {
-          item_picture.name = item_name + ".png";
-          item_picture.mv('./img/' + item_picture.name, function(error) {
-            if (error) {
-              console.log(error.message);
-              res.render("error", {
-                "msg": error.message
-              });
-            }
-          });
+  if(!isNaN(item_price) || !isNaN(item_quantity)) {
+    res.render("error", {
+      "msg": "Enter numbers!."
+    });
+  } else {
+    productDB.all(`SELECT * FROM products WHERE productname='${item_name}'`, function(error, rows) {
+      if (error) {
+        res.render("error", {
+          "msg": error.message
+        });
+      } else if (rows.length != 0) {
+        res.render("error", {
+          "msg": "Product already exists."
+        });
+      } else {
+        productDB.run(`INSERT INTO products (productname, price, quantity) VALUES ('${item_name}', '${item_price}', ${item_quantity})`, (error) => {
+          if (error) {
+            res.render("error", {
+              "msg": error.message
+            });
+          } else {
 
-          res.redirect("home");
-
-        }
-      });
-    }
-  });
+            //rename image and move it into the right directory
+            item_picture.name = item_name + ".png";
+            item_picture.mv('./img/' + item_picture.name, function(error) {
+              if (error) {
+                res.render("error", {
+                  "msg": error.message
+                });
+              } else {
+                res.redirect("home");
+              }
+            });
+          }
+        });
+      }
+    });
+  }
 });
 
 app.post("/changeItem", function(req, res) {
@@ -324,42 +306,42 @@ app.post("/changeItem", function(req, res) {
   const item_price = req.body["item-price"];
   const item_quantity = req.body["item-quantity"];
 
-  productDB.get(`SELECT id_product FROM products WHERE productname='${item_name}'`, function(error, id) {
-    if (error) {
-      console.log(error.message);
-      res.render("error", {
-        "msg": error.message
-      });
-    }
-
-    if (id != null) {
-      if (item_price != "") {
-        productDB.run(`UPDATE products SET price='${item_price}' WHERE id_product='${id.id_product}'`, (error) => {
-          if (error) {
-            console.log(error.message);
-            res.render("error", {
-              "msg": error.message
-            });
-          }
+  if(!isNaN(item_price) || !isNaN(item_quantity)) {
+    res.render("error", {
+      "msg": "Enter numbers!."
+    });
+  } else {
+    productDB.get(`SELECT id_product FROM products WHERE productname='${item_name}'`, function(error, id) {
+      if (error) {
+        res.render("error", {
+          "msg": error.message
+        });
+      } else if (id != null) {
+        if (item_price != "") {
+          productDB.run(`UPDATE products SET price='${item_price}' WHERE id_product='${id.id_product}'`, (error) => {
+            if (error) {
+              res.render("error", {
+                "msg": error.message
+              });
+            }
+          });
+        } else if (item_quantity != "") {
+          productDB.run(`UPDATE products SET quantity='${item_quantity}' WHERE id_product='${id.id_product}'`, (error) => {
+            if (error) {
+              res.render("error", {
+                "msg": error.message
+              });
+            }
+          });
+        }
+        res.redirect("home");
+      } else {
+        res.render("error", {
+          "msg": "Product not found."
         });
       }
-      if (item_quantity != "") {
-        productDB.run(`UPDATE products SET quantity='${item_quantity}' WHERE id_product='${id.id_product}'`, (error) => {
-          if (error) {
-            console.log(error.message);
-            res.render("error", {
-              "msg": error.message
-            });
-          }
-        });
-      }
-      res.redirect("home");
-    } else {
-      res.render("error", {
-        "msg": "Product not found."
-      });
-    }
-  });
+    });
+  }
 });
 
 app.post("/addToCart", function(req, res) {
@@ -369,7 +351,6 @@ app.post("/addToCart", function(req, res) {
   productDB.get(`SELECT * FROM products WHERE id_product ='${id}'`, function(error, row) {
 
     if (error) {
-      console.log(error.message);
       res.render("error", {
         "msg": error.message
       });
@@ -396,10 +377,10 @@ app.post("/addToCart", function(req, res) {
       res.render("error", {
         "msg": error.message
       });
+    } else {
+      res.redirect("home");
     }
-    res.redirect("home");
   });
-
 });
 
 app.post("/checkout", function(req, res) {
@@ -408,7 +389,6 @@ app.post("/checkout", function(req, res) {
 
     productDB.all(query, function(error, rows) {
       if (error) {
-        console.log(error.message);
         res.render("error", {
           "msg": error.message
         });
@@ -438,11 +418,7 @@ app.post("/checkout", function(req, res) {
         }
         res.redirect("home");
       });
-
     });
-
-
-
   } else {
     res.render("error", {
       "msg": "Please log in before checking out."
@@ -452,11 +428,11 @@ app.post("/checkout", function(req, res) {
 
 app.post("/removeFromCart", function(req, res) {
   var removeProductIndex = req.body["index"];
+
+  //try catch to protect from very fast clicks
   try {
     req.session.cart[removeProductIndex].quantity--;
     if (req.session.cart[removeProductIndex].quantity < 1) {
-      //more elegant but produces bugs
-      // req.session.cart.splice(removeProductIndex, removeProductIndex + 1);
       if (removeProductIndex == 0) {
         req.session.cart.shift();
       } else if (removeProductIndex == req.session.cart.length) {
@@ -476,8 +452,9 @@ app.post("/removeFromCart", function(req, res) {
         res.render("error", {
           "msg": error.message
         });
+      } else {
+        res.redirect("home");
       }
-      res.redirect("home");
     });
   }
 });
@@ -489,8 +466,9 @@ app.post("/clearCart", function(req, res) {
       res.render("error", {
         "msg": error.message
       });
+    } else {
+      res.redirect("home");
     }
-    res.redirect("home");
   });
 });
 
@@ -505,6 +483,7 @@ app.post("/searchItem", function(req, res) {
   productDB.all(sql, function(error, rows) {
     if (error) {
       console.log(error.message);
+      res.redirect("/home");
     } else {
 
       if (req.session.isAdmin) {
@@ -528,8 +507,11 @@ app.post("/deleteItem", function(req, res) {
 
   productDB.run(sql, function(error, rows) {
     if (error) {
-      console.log(error.message);
+      res.render("error", {
+        "msg": error.message
+      });
+    } else {
+      res.redirect("/home");
     }
-    res.redirect("/home");
   });
 });

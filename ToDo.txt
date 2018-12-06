@@ -1,9 +1,0 @@
-Needs implementation:
-  -
-
-Maybe needs implementation:
-  - scaling?
-
-
-Needs fixing:
-- spam clicking?
